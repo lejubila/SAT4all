@@ -19,6 +19,9 @@ RUN apk add --no-cache libcap \
     && cp /bin/busybox /usr/local/bin/traceroute \
     && setcap cap_net_raw+ep /usr/local/bin/traceroute
 
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
 EXPOSE 9000
 
-CMD ["php-fpm"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
