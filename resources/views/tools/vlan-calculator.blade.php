@@ -1,0 +1,92 @@
+@extends('layouts.app')
+
+@section('title', __('tools.vlan_calculator.title'))
+
+@section('content')
+    <section class="mb-6">
+        <h1 class="text-2xl font-bold tracking-tight text-slate-900">
+            {{ __('tools.vlan_calculator.title') }}
+        </h1>
+        <p class="mt-2 max-w-2xl text-slate-600">
+            {{ __('tools.vlan_calculator.description') }}
+        </p>
+    </section>
+
+    <div class="grid gap-6 lg:grid-cols-5">
+        {{-- Form --}}
+        <form class="lg:col-span-2 rounded-lg border border-slate-200 bg-white p-5 shadow-sm space-y-4"
+              hx-post="{{ route('tools.vlan-calculator.calculate') }}"
+              hx-target="#result"
+              hx-swap="innerHTML">
+            @csrf
+
+            <div>
+                <label for="network" class="mb-1 block text-sm font-medium text-slate-700">
+                    {{ __('tools.vlan_calculator.input_network') }}
+                </label>
+                <input type="text" name="network" id="network"
+                       value="10.0.0.0"
+                       placeholder="{{ __('tools.vlan_calculator.placeholder_network') }}"
+                       class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm
+                              focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+            </div>
+
+            <div>
+                <label for="base_cidr" class="mb-1 block text-sm font-medium text-slate-700">
+                    {{ __('tools.vlan_calculator.input_base_cidr') }}
+                </label>
+                <select name="base_cidr" id="base_cidr"
+                        class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm
+                               focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                    @foreach ($baseCidrOptions as $cidr => $netmask)
+                        @if ($cidr <= 30)
+                            <option value="{{ $cidr }}" @selected($cidr === 8)>
+                                /{{ $cidr }} — {{ $netmask }}
+                            </option>
+                        @endif
+                    @endforeach
+                </select>
+            </div>
+
+            <div>
+                <label for="subnet_cidr" class="mb-1 block text-sm font-medium text-slate-700">
+                    {{ __('tools.vlan_calculator.input_subnet_cidr') }}
+                </label>
+                <select name="subnet_cidr" id="subnet_cidr"
+                        class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm
+                               focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                    @foreach ($subnetCidrOptions as $cidr => $netmask)
+                        @if ($cidr >= 1)
+                            <option value="{{ $cidr }}" @selected($cidr === 24)>
+                                /{{ $cidr }} — {{ $netmask }}
+                            </option>
+                        @endif
+                    @endforeach
+                </select>
+            </div>
+
+            <div>
+                <label for="start_vlan" class="mb-1 block text-sm font-medium text-slate-700">
+                    {{ __('tools.vlan_calculator.input_start_vlan') }}
+                </label>
+                <input type="number" name="start_vlan" id="start_vlan"
+                       value="10" min="1" max="4094"
+                       class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm
+                              focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+            </div>
+
+            <button type="submit"
+                    class="w-full rounded-md bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-900
+                           hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                {{ __('tools.vlan_calculator.calculate') }}
+            </button>
+        </form>
+
+        {{-- Risultato --}}
+        <div id="result" class="lg:col-span-3">
+            <div class="rounded-lg border border-dashed border-slate-300 bg-white p-5 text-sm text-slate-500">
+                {{ __('tools.vlan_calculator.empty') }}
+            </div>
+        </div>
+    </div>
+@endsection
