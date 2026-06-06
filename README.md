@@ -76,19 +76,22 @@ cd SAT4all
 # 2. Environment
 cp .env.example .env
 
-# 3. Build and start containers
+# 3. Fix storage permissions (required on Linux)
+chmod -R 775 storage bootstrap/cache
+
+# 4. Build and start containers
 docker compose up -d --build
 
-# 4. Install PHP dependencies
+# 5. Install PHP dependencies
 docker compose exec app composer install --no-dev --optimize-autoloader
 
-# 5. Generate app key
+# 6. Generate app key
 docker compose exec app php artisan key:generate
 
-# 6. Run database migrations
+# 7. Run database migrations
 docker compose exec app php artisan migrate
 
-# 7. Seed the OUI vendor database (~39 000 IEEE entries, requires internet)
+# 8. Seed the OUI vendor database (~39 000 IEEE entries, requires internet)
 docker compose exec app php artisan db:seed --class=OuiVendorSeeder
 ```
 
