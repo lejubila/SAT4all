@@ -161,7 +161,11 @@
     </main>
 
     <footer class="mx-auto max-w-5xl px-4 py-8 text-center text-xs text-slate-400">
-        {{ __('ui.footer_built_with') }}
+        <a href="https://github.com/lejubila/SAT4all"
+           target="_blank" rel="noopener noreferrer"
+           class="hover:text-slate-200 hover:underline transition-colors">
+            github.com/lejubila/SAT4all
+        </a>
     </footer>
     @stack('scripts')
 </body>

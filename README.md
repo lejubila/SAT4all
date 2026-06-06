@@ -70,7 +70,7 @@ No Node.js, no npm, no build step. The entire frontend weighs under 30 KB of CDN
 
 ```bash
 # 1. Clone
-git clone https://github.com/your-username/sysadmin-toolkit-for-all.git
+git clone https://github.com/lejubila/SAT4all.git
 cd sysadmin-toolkit-for-all
 
 # 2. Environment
@@ -89,7 +89,7 @@ docker compose exec app php artisan migrate
 docker compose exec app php artisan db:seed --class=OuiVendorSeeder
 ```
 
-Open **http://localhost:8082** in your browser.
+Open **http://localhost:8080** in your browser (or the port set in `APP_PORT`).
 
 > The OUI seeder downloads the IEEE MA-L CSV (~3 MB) once and takes about 30 seconds.  
 > The MAC Address Lookup tool falls back to an embedded list of ~400 common vendors if the seeder has not been run yet.
