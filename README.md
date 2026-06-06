@@ -71,7 +71,7 @@ No Node.js, no npm, no build step. The entire frontend weighs under 30 KB of CDN
 ```bash
 # 1. Clone
 git clone https://github.com/lejubila/SAT4all.git
-cd sysadmin-toolkit-for-all
+cd SAT4all
 
 # 2. Environment
 cp .env.example .env
