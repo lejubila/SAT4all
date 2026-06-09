@@ -626,4 +626,41 @@ return [
         'error_too_large'      => "L'input supera il limite di 200 KB.",
         'error_unknown_format' => 'Formato non riconosciuto. Seleziona JSON, XML o HTML manualmente.',
     ],
+
+    'port_checker' => [
+        'title'       => 'Port Checker',
+        'description' => 'Verifica se una porta TCP o UDP è aperta su un host remoto.',
+        'menu'        => 'Port Checker',
+
+        'label_host'        => 'Host / Indirizzo IP',
+        'placeholder_host'  => 'es. example.com o 192.168.1.1',
+        'label_port'        => 'Porta',
+        'placeholder_port'  => 'es. 80',
+        'label_protocol'    => 'Protocollo',
+        'label_captcha'     => 'Copia il codice qui sopra',
+        'placeholder_captcha' => 'Inserisci il codice',
+        'btn_check'         => 'Verifica',
+
+        'status_open'         => 'Aperta',
+        'status_closed'       => 'Chiusa',
+        'status_filtered'     => 'Filtrata',
+        'status_open_filtered'=> 'Aperta / Filtrata',
+
+        'result_host'      => 'Host',
+        'result_port'      => 'Porta',
+        'result_protocol'  => 'Protocollo',
+        'result_latency'   => 'Latenza',
+        'result_latency_ms'=> ':ms ms',
+
+        'udp_note' => 'UDP: l\'assenza di risposta non garantisce che la porta sia aperta — i firewall possono bloccare i pacchetti ICMP senza rispondere.',
+
+        'error_host_required'     => "L'host è obbligatorio.",
+        'error_host_invalid'      => 'Inserisci un hostname o indirizzo IP valido.',
+        'error_port_required'     => 'La porta è obbligatoria.',
+        'error_port_invalid'      => 'La porta deve essere un numero tra 1 e 65535.',
+        'error_protocol_invalid'  => 'Seleziona TCP o UDP.',
+        'error_captcha_required'  => 'Inserisci il codice di verifica.',
+        'error_captcha'           => 'Codice non corretto. Un nuovo codice è stato generato.',
+        'error_throttle'          => 'Troppo richieste. Riprova tra un minuto.',
+    ],
 ];

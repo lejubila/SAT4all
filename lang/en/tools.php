@@ -626,4 +626,41 @@ return [
         'error_too_large'      => 'Input exceeds the 200 KB limit.',
         'error_unknown_format' => 'Format not recognised. Select JSON, XML or HTML manually.',
     ],
+
+    'port_checker' => [
+        'title'       => 'Port Checker',
+        'description' => 'Check whether a TCP or UDP port is open on a remote host.',
+        'menu'        => 'Port Checker',
+
+        'label_host'        => 'Host / IP Address',
+        'placeholder_host'  => 'e.g. example.com or 192.168.1.1',
+        'label_port'        => 'Port',
+        'placeholder_port'  => 'e.g. 80',
+        'label_protocol'    => 'Protocol',
+        'label_captcha'     => 'Type the code shown above',
+        'placeholder_captcha' => 'Enter the code',
+        'btn_check'         => 'Check',
+
+        'status_open'         => 'Open',
+        'status_closed'       => 'Closed',
+        'status_filtered'     => 'Filtered',
+        'status_open_filtered'=> 'Open / Filtered',
+
+        'result_host'      => 'Host',
+        'result_port'      => 'Port',
+        'result_protocol'  => 'Protocol',
+        'result_latency'   => 'Latency',
+        'result_latency_ms'=> ':ms ms',
+
+        'udp_note' => 'UDP: no response does not guarantee the port is open — firewalls may silently drop ICMP packets.',
+
+        'error_host_required'     => 'Host is required.',
+        'error_host_invalid'      => 'Enter a valid hostname or IP address.',
+        'error_port_required'     => 'Port is required.',
+        'error_port_invalid'      => 'Port must be a number between 1 and 65535.',
+        'error_protocol_invalid'  => 'Select TCP or UDP.',
+        'error_captcha_required'  => 'Enter the verification code.',
+        'error_captcha'           => 'Incorrect code. A new code has been generated.',
+        'error_throttle'          => 'Too many requests. Please try again in a minute.',
+    ],
 ];

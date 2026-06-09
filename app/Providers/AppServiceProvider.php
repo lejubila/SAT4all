@@ -17,5 +17,10 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('dns-lookup', function (Request $request): Limit {
             return Limit::perSecond(60)->by($request->ip());
         });
+
+        // 60 richieste al minuto per IP sul port checker.
+        RateLimiter::for('port-checker', function (Request $request): Limit {
+            return Limit::perMinute(60)->by($request->ip());
+        });
     }
 }

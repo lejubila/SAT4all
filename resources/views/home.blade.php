@@ -24,6 +24,7 @@
                 ['name' => __('tools.whois.title'),             'route' => 'tools.whois.index'],
                 ['name' => __('tools.ip_geolocation.title'),   'route' => 'tools.ip-geolocation.index'],
                 ['name' => __('tools.ssl_checker.title'),       'route' => 'tools.ssl-checker.index'],
+                ['name' => __('tools.port_checker.title'),     'route' => 'tools.port-checker.index'],
                 ['name' => __('tools.mac_lookup.title'),        'route' => 'tools.mac-lookup.index'],
             ],
             __('ui.group_references') => [

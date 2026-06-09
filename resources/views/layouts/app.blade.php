@@ -107,6 +107,10 @@
                            class="block px-4 py-2 text-sm hover:bg-slate-100">
                             {{ __('tools.ssl_checker.menu') }}
                         </a>
+                        <a href="{{ route('tools.port-checker.index') }}"
+                           class="block px-4 py-2 text-sm hover:bg-slate-100">
+                            {{ __('tools.port_checker.menu') }}
+                        </a>
                         <a href="{{ route('tools.base-converter.index') }}"
                            class="block px-4 py-2 text-sm hover:bg-slate-100">
                             {{ __('tools.base_converter.menu') }}

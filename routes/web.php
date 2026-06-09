@@ -22,6 +22,7 @@ use App\Http\Controllers\Tools\VlanCalculatorController;
 use App\Http\Controllers\Tools\Ipv6CalculatorController;
 use App\Http\Controllers\Tools\PortReferenceController;
 use App\Http\Controllers\Tools\SubnetCalculatorController;
+use App\Http\Controllers\Tools\PortCheckerController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => view('home'))->name('home');
@@ -127,4 +128,10 @@ Route::prefix('tools')->name('tools.')->group(function (): void {
         ->name('formatter.index');
     Route::post('formatter/format', [FormatterController::class, 'format'])
         ->name('formatter.format');
+
+    Route::get('port-checker', [PortCheckerController::class, 'index'])
+        ->name('port-checker.index');
+    Route::post('port-checker/check', [PortCheckerController::class, 'check'])
+        ->name('port-checker.check')
+        ->middleware('throttle:port-checker');
 });
