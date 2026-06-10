@@ -2,7 +2,7 @@
 
 A lightweight, stateless web application for sysadmins — networking tools, reference tables and quick lookups, all in one place. No login, no tracking, no JavaScript frameworks to install.
 
-## Tools (21)
+## Tools (23)
 
 ### Subnet & IP
 | Tool | Route | Description |
@@ -21,6 +21,7 @@ A lightweight, stateless web application for sysadmins — networking tools, ref
 | Whois Lookup | `/tools/whois` | Raw Whois output for domains and IP addresses |
 | IP Geolocation | `/tools/ip-geolocation` | Country, city, ISP, coordinates and timezone for any IP |
 | SSL/TLS Checker | `/tools/ssl-checker` | Certificate validity, expiry, issuer and SHA-256 fingerprint |
+| Port Checker | `/tools/port-checker` | Test TCP/UDP port reachability on a remote host; server-side captcha + 60 req/min rate limit |
 | MAC Address Lookup | `/tools/mac-lookup` | Identify manufacturer from MAC address (39 000+ OUI entries, IEEE MA-L) |
 
 ### References
@@ -44,6 +45,7 @@ A lightweight, stateless web application for sysadmins — networking tools, ref
 | Regex Tester | `/tools/regex-tester` | Test regular expressions with real-time match highlighting |
 | Base Converter | `/tools/base-converter` | Convert integers between binary, octal, decimal and hexadecimal |
 | Formatter | `/tools/formatter` | Prettify and syntax-highlight JSON, XML and HTML |
+| Markdown Viewer | `/tools/markdown-viewer` | Render Markdown with live preview; export to HTML or PDF; internal anchor links supported |
 
 ## Tech Stack
 
@@ -106,7 +108,7 @@ Open **http://localhost:8080** in your browser (or the port set in `APP_PORT`).
 docker compose up -d
 docker compose down
 
-# Run all tests (215 tests, ~4 s)
+# Run all tests (242 tests, ~4 s)
 docker compose exec app php artisan test
 
 # Run a single test class
