@@ -53,6 +53,7 @@
                     hx-target="#md-preview"
                     hx-swap="innerHTML"
                     hx-trigger="input changed delay:600ms"
+                    hx-headers='{"X-CSRF-TOKEN": "{{ csrf_token() }}"}'
                     placeholder="{{ __('tools.markdown_viewer.placeholder_input') }}"
                     spellcheck="false"
                     class="h-96 w-full resize-y rounded-lg border border-slate-300 bg-white px-3 py-2 font-mono text-sm leading-relaxed text-slate-800 shadow-sm focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200"
