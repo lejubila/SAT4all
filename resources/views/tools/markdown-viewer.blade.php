@@ -36,7 +36,19 @@
         </p>
     </section>
 
-    <div x-data="{ md: '' }">
+    <div x-data="{
+            md: '',
+            syncing: false,
+            syncScroll(from, to) {
+                if (this.syncing) return;
+                this.syncing = true;
+                const max = from.scrollHeight - from.clientHeight;
+                if (max > 0) {
+                    to.scrollTop = (from.scrollTop / max) * (to.scrollHeight - to.clientHeight);
+                }
+                this.$nextTick(() => { this.syncing = false; });
+            }
+         }">
 
         {{-- Layout a due colonne --}}
         <div class="grid gap-6 lg:grid-cols-2">
@@ -49,6 +61,8 @@
                 <textarea
                     name="markdown"
                     x-model="md"
+                    x-ref="editor"
+                    @scroll="syncScroll($refs.editor, $refs.preview)"
                     hx-post="{{ route('tools.markdown-viewer.preview') }}"
                     hx-target="#md-preview"
                     hx-swap="innerHTML"
@@ -56,7 +70,7 @@
                     hx-headers='{"X-CSRF-TOKEN": "{{ csrf_token() }}"}'
                     placeholder="{{ __('tools.markdown_viewer.placeholder_input') }}"
                     spellcheck="false"
-                    class="h-96 w-full resize-y rounded-lg border border-slate-300 bg-white px-3 py-2 font-mono text-sm leading-relaxed text-slate-800 shadow-sm focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200"
+                    class="h-[calc(100vh-18rem)] w-full resize-none rounded-lg border border-slate-300 bg-white px-3 py-2 font-mono text-sm leading-relaxed text-slate-800 shadow-sm focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200"
                 ></textarea>
 
                 {{-- Pulsanti export --}}
@@ -101,7 +115,9 @@
                     {{ __('tools.markdown_viewer.label_preview') }}
                 </p>
                 <div id="md-preview"
-                     class="min-h-96 rounded-lg border border-slate-200 bg-white p-5 shadow-sm overflow-auto">
+                     x-ref="preview"
+                     @scroll="syncScroll($refs.preview, $refs.editor)"
+                     class="h-[calc(100vh-18rem)] rounded-lg border border-slate-200 bg-white p-5 shadow-sm overflow-y-auto">
                     <p class="text-sm text-slate-400 italic">{{ __('tools.markdown_viewer.placeholder_preview') }}</p>
                 </div>
             </div>
