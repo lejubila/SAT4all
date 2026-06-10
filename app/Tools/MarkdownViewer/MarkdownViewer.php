@@ -42,7 +42,7 @@ class MarkdownViewer
 
     public function toFullHtml(string $markdown, string $title = 'Document'): string
     {
-        $body = $this->render($markdown);
+        $body = $this->mergeAnchorsIntoHeadings($this->render($markdown));
 
         $css = <<<'CSS'
             body {
@@ -126,5 +126,23 @@ class MarkdownViewer
             </body>
             </html>
             HTML;
+    }
+
+    /**
+     * Move the id from empty <a id="xyz"> anchors onto the heading that follows.
+     * Browsers handle standalone <a id> fine, but dompdf requires the id to be
+     * on a block element to resolve internal links correctly.
+     */
+    private function mergeAnchorsIntoHeadings(string $html): string
+    {
+        return preg_replace_callback(
+            '~<a\s+(?:id|name)=["\']([^"\']+)["\']\s*(?:></a>|/>)\s*\n?(<h[1-6])([^>]*)>~i',
+            static function (array $m): string {
+                // Strip any existing id attribute from heading attrs, then prepend ours
+                $attrs = preg_replace('/\s+id="[^"]*"/i', '', $m[3]);
+                return $m[2] . ' id="' . htmlspecialchars($m[1], ENT_QUOTES) . '"' . $attrs . '>';
+            },
+            $html
+        ) ?? $html;
     }
 }

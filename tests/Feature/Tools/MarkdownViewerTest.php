@@ -93,6 +93,22 @@ class MarkdownViewerTest extends TestCase
         $this->assertStringContainsString('My Title', $response->getContent());
     }
 
+    public function test_export_html_merges_anchor_id_into_heading(): void
+    {
+        $md = "<a id=\"s1\"></a>\n## My Section\n\n[Go](#s1)";
+
+        $response = $this->post(route('tools.markdown-viewer.export-html'), [
+            'markdown' => $md,
+        ]);
+
+        $response->assertOk();
+        $content = $response->getContent();
+        // The <a id> must be absorbed into the heading for reliable anchor navigation
+        $this->assertStringContainsString('id="s1"', $content);
+        $this->assertStringContainsString('<h2', $content);
+        $this->assertStringContainsString('href="#s1"', $content);
+    }
+
     public function test_export_html_contains_full_html_structure(): void
     {
         $response = $this->post(route('tools.markdown-viewer.export-html'), [
