@@ -27,6 +27,8 @@
                 <input type="text" name="ip" id="ip"
                        value="192.168.1.10"
                        placeholder="{{ __('tools.subnet_calculator.placeholder_ip') }}"
+                       x-data
+                       @fill-ip.window="$el.value = $event.detail"
                        class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm
                               focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500">
             </div>

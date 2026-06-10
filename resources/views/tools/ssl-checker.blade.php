@@ -29,6 +29,8 @@
                        placeholder="{{ __('tools.ssl_checker.placeholder_host') }}"
                        autocomplete="off"
                        spellcheck="false"
+                       x-data
+                       @fill-ip.window="$el.value = $event.detail"
                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200">
             </div>
 
