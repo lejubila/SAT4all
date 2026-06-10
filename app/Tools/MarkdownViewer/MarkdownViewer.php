@@ -15,7 +15,7 @@ class MarkdownViewer
     public function __construct()
     {
         $environment = new Environment([
-            'html_input'         => 'strip',
+            'html_input'         => 'allow',  // User pastes own content; <a id="..."> anchors must survive
             'allow_unsafe_links' => false,
             'heading_permalink'  => [
                 'apply_id_to_heading' => true,

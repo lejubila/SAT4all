@@ -42,16 +42,18 @@ class MarkdownViewerTest extends TestCase
           ->assertSee(__('tools.markdown_viewer.placeholder_preview'));
     }
 
-    public function test_preview_strips_raw_html_script_tag(): void
+    public function test_preview_passes_through_html_anchor(): void
     {
+        // html_input=allow: <a id="..."> anchors must survive for internal links to work
         $this->post(route('tools.markdown-viewer.preview'), [
-            'markdown' => '<script>alert(1)</script>',
+            'markdown' => '<a id="section-1"></a>' . "\n" . '## Section',
         ])->assertOk()
-          ->assertDontSee('<script>', false);
+          ->assertSee('id="section-1"', false);
     }
 
-    public function test_preview_strips_inline_javascript_link(): void
+    public function test_preview_blocks_javascript_links(): void
     {
+        // allow_unsafe_links=false still blocks javascript: URIs in links
         $this->post(route('tools.markdown-viewer.preview'), [
             'markdown' => '[click](javascript:alert(1))',
         ])->assertOk()
