@@ -95,6 +95,8 @@ class MarkdownViewerTest extends TestCase
 
     public function test_export_html_merges_anchor_id_into_heading(): void
     {
+        // CommonMark wraps standalone <a id> in <p>; mergeAnchorsIntoHeadings must
+        // handle <p><a id="s1"></a></p>\n<h2 ...> and produce <h2 id="s1">
         $md = "<a id=\"s1\"></a>\n## My Section\n\n[Go](#s1)";
 
         $response = $this->post(route('tools.markdown-viewer.export-html'), [
@@ -103,10 +105,10 @@ class MarkdownViewerTest extends TestCase
 
         $response->assertOk();
         $content = $response->getContent();
-        // The <a id> must be absorbed into the heading for reliable anchor navigation
-        $this->assertStringContainsString('id="s1"', $content);
-        $this->assertStringContainsString('<h2', $content);
+        $this->assertStringContainsString('<h2 id="s1"', $content);
         $this->assertStringContainsString('href="#s1"', $content);
+        // Standalone <p><a id="s1"></a></p> must be gone
+        $this->assertStringNotContainsString('<p><a id="s1"', $content);
     }
 
     public function test_export_html_contains_full_html_structure(): void

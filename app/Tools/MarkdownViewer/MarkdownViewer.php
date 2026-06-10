@@ -135,10 +135,12 @@ class MarkdownViewer
      */
     private function mergeAnchorsIntoHeadings(string $html): string
     {
+        // CommonMark wraps standalone <a id> in <p>, so match both:
+        //   <p><a id="xyz"></a></p>\n<hN ...>
+        //   <a id="xyz"></a>\n<hN ...>
         return preg_replace_callback(
-            '~<a\s+(?:id|name)=["\']([^"\']+)["\']\s*(?:></a>|/>)\s*\n?(<h[1-6])([^>]*)>~i',
+            '~(?:<p>\s*)?<a\s+(?:id|name)=["\']([^"\']+)["\']\s*(?:></a>|/>)(?:\s*</p>)?\s*\n?(<h[1-6])([^>]*)>~i',
             static function (array $m): string {
-                // Strip any existing id attribute from heading attrs, then prepend ours
                 $attrs = preg_replace('/\s+id="[^"]*"/i', '', $m[3]);
                 return $m[2] . ' id="' . htmlspecialchars($m[1], ENT_QUOTES) . '"' . $attrs . '>';
             },
