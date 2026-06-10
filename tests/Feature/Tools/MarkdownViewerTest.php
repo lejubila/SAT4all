@@ -22,7 +22,8 @@ class MarkdownViewerTest extends TestCase
         $this->post(route('tools.markdown-viewer.preview'), [
             'markdown' => '# Hello World',
         ])->assertOk()
-          ->assertSee('<h1>', false);
+          ->assertSee('<h1', false)
+          ->assertSee('Hello World');
     }
 
     public function test_preview_renders_bold(): void
@@ -86,7 +87,7 @@ class MarkdownViewerTest extends TestCase
         ]);
 
         $response->assertOk();
-        $this->assertStringContainsString('<h1>', $response->getContent());
+        $this->assertStringContainsString('<h1', $response->getContent());
         $this->assertStringContainsString('My Title', $response->getContent());
     }
 
