@@ -26,7 +26,7 @@
 </style>
 @endpush
 
-@section('content')
+@section('wide_content')
     <section class="mb-6">
         <h1 class="text-2xl font-bold tracking-tight text-slate-900">
             {{ __('tools.markdown_viewer.title') }}

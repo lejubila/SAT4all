@@ -164,8 +164,15 @@
         </button>
     </div>
 
-    <main class="mx-auto max-w-5xl px-4 py-8">
-        @yield('content')
+    <main @class([
+        'w-full px-4 py-4'        => $__env->hasSection('wide_content'),
+        'mx-auto max-w-5xl px-4 py-8' => ! $__env->hasSection('wide_content'),
+    ])>
+        @hasSection('wide_content')
+            @yield('wide_content')
+        @else
+            @yield('content')
+        @endif
     </main>
 
     <footer class="mx-auto max-w-5xl px-4 py-8 text-center text-xs text-slate-400">
