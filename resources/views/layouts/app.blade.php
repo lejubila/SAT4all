@@ -123,6 +123,10 @@
                            class="block px-4 py-2 text-sm hover:bg-slate-100">
                             {{ __('tools.formatter.menu') }}
                         </a>
+                        <a href="{{ route('tools.markdown-viewer.index') }}"
+                           class="block px-4 py-2 text-sm hover:bg-slate-100">
+                            {{ __('tools.markdown_viewer.menu') }}
+                        </a>
                     </div>
                 </div>
 

@@ -663,4 +663,22 @@ return [
         'error_captcha'           => 'Codice non corretto. Un nuovo codice è stato generato.',
         'error_throttle'          => 'Troppo richieste. Riprova tra un minuto.',
     ],
+
+    'markdown_viewer' => [
+        'title'       => 'Visualizzatore Markdown',
+        'description' => 'Incolla testo Markdown per visualizzarne l\'anteprima renderizzata ed esportarlo in HTML o PDF.',
+        'menu'        => 'Markdown Viewer',
+
+        'label_input'          => 'Testo Markdown',
+        'placeholder_input'    => "# Titolo\n\nScrivi qui il tuo testo **Markdown**...",
+        'label_preview'        => 'Anteprima',
+        'placeholder_preview'  => 'L\'anteprima apparirà qui mentre digiti.',
+
+        'btn_export_html' => 'Scarica HTML',
+        'btn_export_pdf'  => 'Scarica PDF',
+
+        'hint_limit'  => 'Limite: 100.000 caratteri.',
+
+        'error_too_large' => 'Il testo supera il limite di 100.000 caratteri.',
+    ],
 ];

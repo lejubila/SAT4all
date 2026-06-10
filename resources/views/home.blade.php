@@ -42,6 +42,7 @@
                 ['name' => __('tools.regex_tester.title'),     'route' => 'tools.regex-tester.index'],
                 ['name' => __('tools.base_converter.title'),   'route' => 'tools.base-converter.index'],
                 ['name' => __('tools.formatter.title'),        'route' => 'tools.formatter.index'],
+                ['name' => __('tools.markdown_viewer.title'), 'route' => 'tools.markdown-viewer.index'],
             ],
         ];
     @endphp

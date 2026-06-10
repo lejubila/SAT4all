@@ -663,4 +663,22 @@ return [
         'error_captcha'           => 'Incorrect code. A new code has been generated.',
         'error_throttle'          => 'Too many requests. Please try again in a minute.',
     ],
+
+    'markdown_viewer' => [
+        'title'       => 'Markdown Viewer',
+        'description' => 'Paste Markdown text to preview the rendered output and export it as HTML or PDF.',
+        'menu'        => 'Markdown Viewer',
+
+        'label_input'         => 'Markdown Input',
+        'placeholder_input'   => "# Title\n\nWrite your **Markdown** here...",
+        'label_preview'       => 'Preview',
+        'placeholder_preview' => 'Preview will appear here as you type.',
+
+        'btn_export_html' => 'Download HTML',
+        'btn_export_pdf'  => 'Download PDF',
+
+        'hint_limit'  => 'Limit: 100,000 characters.',
+
+        'error_too_large' => 'The text exceeds the 100,000 character limit.',
+    ],
 ];

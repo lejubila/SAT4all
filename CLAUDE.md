@@ -149,6 +149,7 @@ sysadmin-toolkit-for-all/
 | Base Converter | `/tools/base-converter` | ✅ fatto |
 | Bandwidth Calculator | `/tools/bandwidth-calculator` | ✅ fatto |
 | Formatter | `/tools/formatter` | ✅ fatto |
+| Markdown Viewer | `/tools/markdown-viewer` | ✅ fatto |
 
 ---
 

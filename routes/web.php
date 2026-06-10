@@ -23,6 +23,7 @@ use App\Http\Controllers\Tools\Ipv6CalculatorController;
 use App\Http\Controllers\Tools\PortReferenceController;
 use App\Http\Controllers\Tools\SubnetCalculatorController;
 use App\Http\Controllers\Tools\PortCheckerController;
+use App\Http\Controllers\Tools\MarkdownViewerController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => view('home'))->name('home');
@@ -134,4 +135,13 @@ Route::prefix('tools')->name('tools.')->group(function (): void {
     Route::post('port-checker/check', [PortCheckerController::class, 'check'])
         ->name('port-checker.check')
         ->middleware('throttle:port-checker');
+
+    Route::get('markdown-viewer', [MarkdownViewerController::class, 'index'])
+        ->name('markdown-viewer.index');
+    Route::post('markdown-viewer/preview', [MarkdownViewerController::class, 'preview'])
+        ->name('markdown-viewer.preview');
+    Route::post('markdown-viewer/export-html', [MarkdownViewerController::class, 'exportHtml'])
+        ->name('markdown-viewer.export-html');
+    Route::post('markdown-viewer/export-pdf', [MarkdownViewerController::class, 'exportPdf'])
+        ->name('markdown-viewer.export-pdf');
 });
