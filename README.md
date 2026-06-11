@@ -2,7 +2,7 @@
 
 A lightweight, stateless web application for sysadmins — networking tools, reference tables and quick lookups, all in one place. No login, no tracking, no JavaScript frameworks to install.
 
-## Tools (23)
+## Tools (28)
 
 ### Subnet & IP
 | Tool | Route | Description |
@@ -46,6 +46,15 @@ A lightweight, stateless web application for sysadmins — networking tools, ref
 | Base Converter | `/tools/base-converter` | Convert integers between binary, octal, decimal and hexadecimal |
 | Formatter | `/tools/formatter` | Prettify and syntax-highlight JSON, XML and HTML |
 | Markdown Viewer | `/tools/markdown-viewer` | Render Markdown with live preview; export to HTML or PDF; internal anchor links supported |
+
+### Email
+| Tool | Route | Description |
+|------|-------|-------------|
+| Email Header Analyzer | `/tools/email-header-analyzer` | Parse raw email headers: delivery hop trace with per-hop delays, SPF/DKIM/DMARC results and key field summary |
+| Email Deliverability Checker | `/tools/email-deliverability` | Check MX, SPF, DMARC and DKIM DNS records for a domain; auto-tries common DKIM selectors |
+| Blacklist / RBL Checker | `/tools/blacklist-checker` | Check an IPv4 address or domain against 11 major DNS blacklists (Spamhaus ZEN, SpamCop, SORBS, Barracuda…) |
+| Advanced MX Checker | `/tools/mx-checker` | List MX servers with priority and IPs; probe port 25 for SMTP banner, STARTTLS, AUTH and SIZE capabilities |
+| Email Validator | `/tools/email-validator` | Check syntax, domain MX records and mailbox existence via SMTP (with catch-all detection); server-side captcha |
 
 ## Tech Stack
 
@@ -108,7 +117,7 @@ Open **http://localhost:8080** in your browser (or the port set in `APP_PORT`).
 docker compose up -d
 docker compose down
 
-# Run all tests (242 tests, ~4 s)
+# Run all tests (292 tests, ~50 s)
 docker compose exec app php artisan test
 
 # Run a single test class

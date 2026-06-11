@@ -151,6 +151,15 @@ sysadmin-toolkit-for-all/
 | Formatter | `/tools/formatter` | ✅ fatto |
 | Markdown Viewer | `/tools/markdown-viewer` | ✅ fatto |
 
+### Fase 5 — Email
+| Tool | Rotta | Status |
+|------|-------|--------|
+| Email Header Analyzer | `/tools/email-header-analyzer` | ✅ fatto |
+| Email Deliverability Checker | `/tools/email-deliverability` | ✅ fatto |
+| Blacklist / RBL Checker | `/tools/blacklist-checker` | ✅ fatto |
+| MX Checker avanzato | `/tools/mx-checker` | ✅ fatto |
+| Email Validator | `/tools/email-validator` | ✅ fatto |
+
 ---
 
 ## ⚙️ Convenzioni di Codice

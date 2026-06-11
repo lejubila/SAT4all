@@ -681,4 +681,200 @@ return [
 
         'error_too_large' => 'The text exceeds the 100,000 character limit.',
     ],
+
+    'email_header_analyzer' => [
+        'title'       => 'Email Header Analyzer',
+        'description' => 'Analyze an email header: delivery hop trace with per-hop delays, SPF/DKIM/DMARC results, and a summary of key fields.',
+        'menu'        => 'Email Header Analyzer',
+
+        'label_input'          => 'Raw email header',
+        'placeholder_input'    => "Paste the full email header here (right-click → View source → copy the header section)…",
+        'btn_analyze'          => 'Analyze',
+        'empty'                => 'Paste an email header to see the analysis.',
+
+        'section_summary'      => 'Summary',
+        'section_trace'        => 'Delivery trace',
+        'section_auth'         => 'Authentication',
+        'section_all_headers'  => 'All headers',
+        'btn_show_headers'     => 'Show all headers',
+        'btn_hide_headers'     => 'Hide headers',
+
+        'field_from'       => 'From',
+        'field_to'         => 'To',
+        'field_subject'    => 'Subject',
+        'field_date'       => 'Date',
+        'field_message_id' => 'Message-ID',
+        'field_reply_to'   => 'Reply-To',
+        'field_mailer'     => 'Mailer',
+
+        'col_hop'       => '#',
+        'col_from'      => 'From',
+        'col_by'        => 'By',
+        'col_timestamp' => 'Timestamp',
+        'col_delay'     => 'Delay',
+        'row_total'     => 'Total',
+        'no_hops'       => 'No Received: headers found.',
+
+        'auth_spf'   => 'SPF',
+        'auth_dkim'  => 'DKIM',
+        'auth_dmarc' => 'DMARC',
+        'auth_raw'   => 'Raw Authentication-Results',
+        'auth_none'  => 'Absent',
+
+        'error_no_headers' => 'No recognisable headers found. Make sure the pasted text contains valid email headers.',
+        'error_too_large'  => 'The header exceeds the 50,000 character limit.',
+    ],
+
+    'email_deliverability' => [
+        'title'       => 'Email Deliverability Checker',
+        'description' => 'Check the DNS records for a domain\'s email deliverability: MX, SPF, DMARC and DKIM.',
+        'menu'        => 'Deliverability Checker',
+
+        'label_domain'          => 'Domain',
+        'placeholder_domain'    => 'e.g. example.com or user@example.com',
+        'label_dkim_selector'   => 'DKIM Selector',
+        'placeholder_dkim_selector' => 'e.g. google, default…',
+        'optional'              => 'optional',
+        'btn_check'             => 'Check',
+        'empty'                 => 'Enter a domain to see the analysis.',
+        'hint_dkim'             => 'If no DKIM selector is entered, common ones are tried automatically (google, default, k1, mail…).',
+
+        'checking'      => 'Results for',
+        'found'         => 'Found',
+        'not_found'     => 'Not found',
+
+        'col_priority'  => 'Priority',
+        'col_host'      => 'Host',
+
+        'mx_none'       => 'No MX records found for this domain.',
+        'spf_none'      => 'No SPF record found.',
+        'spf_mechanism' => 'All mechanism:',
+        'dmarc_none'    => 'No DMARC record found.',
+        'dmarc_policy'  => 'Policy',
+        'dmarc_sp'      => 'Subdomain policy',
+        'dmarc_pct'     => 'Percentage',
+        'dmarc_rua'     => 'Aggregate reports',
+        'dkim_selector' => 'Selector:',
+        'dkim_none'     => 'No DKIM record found with this selector.',
+        'dkim_not_found_selector' => 'none found automatically',
+
+        'error_domain_required' => 'Domain is required.',
+        'error_domain_invalid'  => 'Enter a valid domain or email address.',
+        'error_domain_too_long' => 'Domain cannot exceed 253 characters.',
+    ],
+
+    'blacklist_checker' => [
+        'title'       => 'Blacklist / RBL Checker',
+        'description' => 'Check whether an IPv4 address or domain is listed in the major DNS blacklists (DNSBL/RBL) used for spam filtering.',
+        'menu'        => 'Blacklist Checker',
+
+        'label_target'       => 'IP Address or Domain',
+        'placeholder_target' => 'e.g. 1.2.3.4 or example.com',
+        'btn_check'          => 'Check',
+        'empty'              => 'Enter an IP address or domain to check it.',
+        'hint'               => 'Also accepts email addresses (e.g. user@example.com) — the domain will be extracted.',
+
+        'summary_clean'   => 'Not listed in any blacklist',
+        'summary_listed'  => 'Listed in one or more blacklists',
+        'checked_ip'      => 'Checked IP:',
+        'resolved_from'   => 'resolved from',
+        'checked_domain'  => 'Checked domain:',
+        'ip_unresolved'   => 'IP could not be resolved, only domain RBLs checked',
+
+        'col_name'    => 'Blacklist',
+        'col_zone'    => 'DNS Zone',
+        'col_type'    => 'Type',
+        'col_status'  => 'Status',
+        'col_detail'  => 'Detail',
+
+        'status_listed' => 'Listed',
+        'status_clean'  => 'Clean',
+
+        'error_target_required' => 'Enter an IP address or domain.',
+        'error_target_invalid'  => 'Enter a valid IPv4 address or a valid domain name.',
+        'error_target_too_long' => 'Input cannot exceed 253 characters.',
+    ],
+
+    'mx_checker' => [
+        'title'       => 'Advanced MX Checker',
+        'description' => 'Check a domain\'s MX servers: priority, IP addresses, SMTP port 25 reachability, greeting banner and EHLO capabilities (STARTTLS, AUTH, SIZE).',
+        'menu'        => 'MX Checker',
+
+        'label_domain'       => 'Domain',
+        'placeholder_domain' => 'e.g. example.com or user@example.com',
+        'btn_check'          => 'Check',
+        'empty'              => 'Enter a domain to analyse its MX servers.',
+        'hint'               => 'Also accepts email addresses — the domain will be extracted. The SMTP test on port 25 may take a few seconds.',
+
+        'no_mx'          => 'No MX records found for',
+        'server_count'   => 'MX servers for :domain',
+        'priority'       => 'Priority',
+        'reachable'      => 'Reachable',
+        'unreachable'    => 'Unreachable',
+        'ip_unresolvable'=> 'IP address could not be resolved.',
+
+        'label_banner'       => 'Banner:',
+        'label_capabilities' => 'Capabilities:',
+        'show_ehlo'          => 'Full EHLO response',
+
+        'port25_blocked' => 'Port 25 unreachable — it may be blocked by the provider firewall or local network.',
+
+        'label_captcha'       => 'Type the code shown above',
+        'placeholder_captcha' => 'Enter the code',
+
+        'error_domain_required'  => 'Domain is required.',
+        'error_domain_invalid'   => 'Enter a valid domain or email address.',
+        'error_domain_too_long'  => 'Domain cannot exceed 253 characters.',
+        'error_captcha_required' => 'Enter the verification code.',
+        'error_captcha'          => 'Incorrect code. A new code has been generated.',
+    ],
+
+    'email_validator' => [
+        'title'       => 'Email Validator',
+        'description' => 'Check if an email address is valid: validates syntax, domain MX records, and mailbox reachability via SMTP.',
+        'menu'        => 'Email Validator',
+
+        'label_email'       => 'Email address',
+        'placeholder_email' => 'e.g. user@example.com',
+        'btn_check'         => 'Check',
+        'empty'             => 'Enter an email address to check its validity.',
+        'hint'              => 'The SMTP check connects to the domain mail server — some providers block verification and the result may be "unverifiable".',
+
+        'label_captcha'       => 'Type the code shown above',
+        'placeholder_captcha' => 'Enter the code',
+
+        'section_syntax' => 'Syntax',
+        'section_mx'     => 'MX Records',
+        'section_smtp'   => 'SMTP Check',
+        'section_result' => 'Result',
+
+        'syntax_valid'   => 'Valid',
+        'syntax_invalid' => 'Invalid',
+        'local_part'     => 'Local part',
+        'domain_part'    => 'Domain',
+
+        'mx_found'       => ':count MX record(s) found',
+        'mx_not_found'   => 'No MX records — domain cannot receive email',
+        'mx_fallback'    => 'No MX records, but domain has an A record (fallback)',
+        'mx_host'        => 'Server',
+        'mx_priority'    => 'Priority',
+
+        'smtp_valid'       => 'Mailbox accepted',
+        'smtp_invalid'     => 'Mailbox rejected',
+        'smtp_catchall'    => 'Catch-all: domain accepts any address',
+        'smtp_risky'       => 'Temporary response — may be an anti-spam block',
+        'smtp_unavailable' => 'Unverifiable: server does not allow SMTP checks',
+        'smtp_skipped'     => 'Not performed',
+        'smtp_code'        => 'Response code',
+
+        'overall_valid'   => 'Valid address',
+        'overall_invalid' => 'Invalid address',
+        'overall_unknown' => 'Unverifiable',
+        'overall_risky'   => 'Uncertain result',
+
+        'error_email_required'   => 'Enter an email address.',
+        'error_email_too_long'   => 'Email address cannot exceed 254 characters.',
+        'error_captcha_required' => 'Enter the verification code.',
+        'error_captcha'          => 'Incorrect code. A new code has been generated.',
+    ],
 ];

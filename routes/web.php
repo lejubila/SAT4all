@@ -24,6 +24,11 @@ use App\Http\Controllers\Tools\PortReferenceController;
 use App\Http\Controllers\Tools\SubnetCalculatorController;
 use App\Http\Controllers\Tools\PortCheckerController;
 use App\Http\Controllers\Tools\MarkdownViewerController;
+use App\Http\Controllers\Tools\EmailHeaderAnalyzerController;
+use App\Http\Controllers\Tools\EmailDeliverabilityController;
+use App\Http\Controllers\Tools\BlacklistController;
+use App\Http\Controllers\Tools\MxCheckerController;
+use App\Http\Controllers\Tools\EmailValidatorController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => view('home'))->name('home');
@@ -144,4 +149,29 @@ Route::prefix('tools')->name('tools.')->group(function (): void {
         ->name('markdown-viewer.export-html');
     Route::post('markdown-viewer/export-pdf', [MarkdownViewerController::class, 'exportPdf'])
         ->name('markdown-viewer.export-pdf');
+
+    Route::get('email-header-analyzer', [EmailHeaderAnalyzerController::class, 'index'])
+        ->name('email-header-analyzer.index');
+    Route::post('email-header-analyzer/analyze', [EmailHeaderAnalyzerController::class, 'analyze'])
+        ->name('email-header-analyzer.analyze');
+
+    Route::get('email-deliverability', [EmailDeliverabilityController::class, 'index'])
+        ->name('email-deliverability.index');
+    Route::post('email-deliverability/check', [EmailDeliverabilityController::class, 'check'])
+        ->name('email-deliverability.check');
+
+    Route::get('blacklist-checker', [BlacklistController::class, 'index'])
+        ->name('blacklist-checker.index');
+    Route::post('blacklist-checker/check', [BlacklistController::class, 'check'])
+        ->name('blacklist-checker.check');
+
+    Route::get('mx-checker', [MxCheckerController::class, 'index'])
+        ->name('mx-checker.index');
+    Route::post('mx-checker/check', [MxCheckerController::class, 'check'])
+        ->name('mx-checker.check');
+
+    Route::get('email-validator', [EmailValidatorController::class, 'index'])
+        ->name('email-validator.index');
+    Route::post('email-validator/check', [EmailValidatorController::class, 'check'])
+        ->name('email-validator.check');
 });

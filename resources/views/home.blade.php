@@ -27,6 +27,13 @@
                 ['name' => __('tools.port_checker.title'),     'route' => 'tools.port-checker.index'],
                 ['name' => __('tools.mac_lookup.title'),        'route' => 'tools.mac-lookup.index'],
             ],
+            __('ui.group_email') => [
+                ['name' => __('tools.email_header_analyzer.title'), 'route' => 'tools.email-header-analyzer.index'],
+                ['name' => __('tools.email_deliverability.title'),  'route' => 'tools.email-deliverability.index'],
+                ['name' => __('tools.blacklist_checker.title'),     'route' => 'tools.blacklist-checker.index'],
+                ['name' => __('tools.mx_checker.title'),            'route' => 'tools.mx-checker.index'],
+                ['name' => __('tools.email_validator.title'),       'route' => 'tools.email-validator.index'],
+            ],
             __('ui.group_references') => [
                 ['name' => __('tools.port_reference.title'),    'route' => 'tools.port-reference.index'],
                 ['name' => __('tools.osi_model.title'),          'route' => 'tools.osi-model.index'],
@@ -42,7 +49,7 @@
                 ['name' => __('tools.regex_tester.title'),     'route' => 'tools.regex-tester.index'],
                 ['name' => __('tools.base_converter.title'),   'route' => 'tools.base-converter.index'],
                 ['name' => __('tools.formatter.title'),        'route' => 'tools.formatter.index'],
-                ['name' => __('tools.markdown_viewer.title'), 'route' => 'tools.markdown-viewer.index'],
+                ['name' => __('tools.markdown_viewer.title'),  'route' => 'tools.markdown-viewer.index'],
             ],
         ];
     @endphp

@@ -19,6 +19,7 @@ return [
     'group_references'  => 'References',
     'group_cabling'     => 'Cabling',
     'group_tools'       => 'Tools',
+    'group_email'       => 'Email',
 
     'footer_built_with' => 'Built with Laravel, Blade, htmx and Alpine.js',
 

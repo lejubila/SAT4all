@@ -74,6 +74,27 @@
                             {{ __('tools.ping_traceroute.menu') }}
                         </a>
                         <div class="my-1 border-t border-slate-100"></div>
+                        <a href="{{ route('tools.email-header-analyzer.index') }}"
+                           class="block px-4 py-2 text-sm hover:bg-slate-100">
+                            {{ __('tools.email_header_analyzer.menu') }}
+                        </a>
+                        <a href="{{ route('tools.email-deliverability.index') }}"
+                           class="block px-4 py-2 text-sm hover:bg-slate-100">
+                            {{ __('tools.email_deliverability.menu') }}
+                        </a>
+                        <a href="{{ route('tools.blacklist-checker.index') }}"
+                           class="block px-4 py-2 text-sm hover:bg-slate-100">
+                            {{ __('tools.blacklist_checker.menu') }}
+                        </a>
+                        <a href="{{ route('tools.mx-checker.index') }}"
+                           class="block px-4 py-2 text-sm hover:bg-slate-100">
+                            {{ __('tools.mx_checker.menu') }}
+                        </a>
+                        <a href="{{ route('tools.email-validator.index') }}"
+                           class="block px-4 py-2 text-sm hover:bg-slate-100">
+                            {{ __('tools.email_validator.menu') }}
+                        </a>
+                        <div class="my-1 border-t border-slate-100"></div>
                         <a href="{{ route('tools.linux-cheatsheet.index') }}"
                            class="block px-4 py-2 text-sm hover:bg-slate-100">
                             {{ __('tools.linux_cheatsheet.menu') }}

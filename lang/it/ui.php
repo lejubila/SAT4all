@@ -19,6 +19,7 @@ return [
     'group_references'  => 'Riferimenti',
     'group_cabling'     => 'Cablaggio',
     'group_tools'       => 'Strumenti',
+    'group_email'       => 'Email',
 
     'footer_built_with' => 'Realizzato con Laravel, Blade, htmx e Alpine.js',
 
