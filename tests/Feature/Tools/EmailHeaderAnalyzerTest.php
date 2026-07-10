@@ -84,6 +84,31 @@ class EmailHeaderAnalyzerTest extends TestCase
         $response->assertSee('mx.destination.com');
     }
 
+    public function test_received_header_shows_ip_address(): void
+    {
+        // mail.origin.com has IP [203.0.113.10] in parentheses → should appear in trace
+        $this->post(route('tools.email-header-analyzer.analyze'), [
+            'header' => self::HEADER_WITH_RECEIVED,
+        ])->assertOk()
+          ->assertSee('203.0.113.10');
+    }
+
+    public function test_received_header_shows_rdns_when_different_from_host(): void
+    {
+        $header = <<<'EOH'
+            Received: from smtp-relay.evil.com (outbound.legit.net [198.51.100.5])
+                    by mx.destination.com (Postfix) with ESMTP; Mon, 10 Jun 2026 12:00:00 +0000
+            From: x@example.com
+            EOH;
+
+        $this->post(route('tools.email-header-analyzer.analyze'), [
+            'header' => $header,
+        ])->assertOk()
+          ->assertSee('smtp-relay.evil.com')
+          ->assertSee('outbound.legit.net')
+          ->assertSee('198.51.100.5');
+    }
+
     public function test_delay_is_calculated_between_hops(): void
     {
         // Two Received: headers 30 seconds apart → delay badge should show 30 s

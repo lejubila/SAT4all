@@ -137,23 +137,18 @@ class EmailHeaderAnalyzer
 
     private function parseReceived(string $value): array
     {
-        $from = '';
-        $by   = '';
+        // Truncate at the semicolon so date parsing doesn't interfere
+        $semi    = strrpos($value, ';');
+        $body    = $semi !== false ? substr($value, 0, $semi) : $value;
+        $dateStr = $semi !== false ? trim(substr($value, $semi + 1)) : '';
 
-        if (preg_match('/\bfrom\s+(\S+)/i', $value, $m)) {
-            $from = $m[1];
-        }
-        if (preg_match('/\bby\s+(\S+)/i', $value, $m)) {
-            $by = $m[1];
-        }
+        $from     = $this->extractReceivedHost($body, 'from');
+        $by       = $this->extractReceivedHost($body, 'by');
 
-        // Timestamp follows the last semicolon
         $unix      = null;
         $timestamp = '';
-        $semi      = strrpos($value, ';');
-        if ($semi !== false) {
-            $dateStr   = trim(substr($value, $semi + 1));
-            $parsed    = strtotime($dateStr);
+        if ($dateStr !== '') {
+            $parsed = strtotime($dateStr);
             if ($parsed !== false) {
                 $unix      = $parsed;
                 $timestamp = date('Y-m-d H:i:s T', $parsed);
@@ -168,6 +163,60 @@ class EmailHeaderAnalyzer
             'timestamp'     => $timestamp,
             'unix'          => $unix,
             'delay_seconds' => null,
+        ];
+    }
+
+    /**
+     * Extract hostname, optional RDNS name and IP from a Received: clause.
+     *
+     * Typical formats:
+     *   from hostname (rdns [1.2.3.4])
+     *   from hostname ([1.2.3.4])
+     *   from hostname (hostname [1.2.3.4]:port)
+     *   by hostname (software)
+     *   by hostname
+     */
+    private function extractReceivedHost(string $body, string $keyword): array
+    {
+        // Match the keyword and capture everything up to the next keyword or end
+        $pattern = '/\b' . $keyword . '\s+(\S+)(?:\s+\(([^)]*)\))?/i';
+
+        if (! preg_match($pattern, $body, $m)) {
+            return ['host' => '', 'rdns' => null, 'ip' => null];
+        }
+
+        $host    = $m[1];
+        $paren   = $m[2] ?? '';
+
+        $rdns = null;
+        $ip   = null;
+
+        if ($paren !== '') {
+            // Extract IP address (IPv4 or IPv6) inside square brackets
+            if (preg_match('/\[([0-9a-fA-F.:]+)\]/', $paren, $im)) {
+                $ip = $im[1];
+            }
+
+            // The part before the bracket (if present) is the RDNS name
+            $beforeBracket = trim(preg_replace('/\[.*?\].*$/', '', $paren));
+            if ($beforeBracket !== '' && $beforeBracket !== $host) {
+                // Filter out software version strings (contain spaces or slashes only)
+                if (str_contains($beforeBracket, '.') || str_contains($beforeBracket, ':')) {
+                    $rdns = rtrim($beforeBracket, ' ,');
+                }
+            }
+        }
+
+        // If host itself looks like an IP, promote it
+        if ($ip === null && filter_var($host, FILTER_VALIDATE_IP)) {
+            $ip   = $host;
+            $host = '';
+        }
+
+        return [
+            'host' => $host,
+            'rdns' => $rdns,
+            'ip'   => $ip,
         ];
     }
 

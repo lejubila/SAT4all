@@ -88,8 +88,28 @@
                         @foreach ($result['hops'] as $i => $hop)
                             <tr class="{{ $i % 2 === 0 ? 'bg-white' : 'bg-slate-50' }} border-b border-slate-100">
                                 <td class="py-1.5 pr-3 font-semibold text-slate-500">{{ $i + 1 }}</td>
-                                <td class="py-1.5 pr-3 font-mono text-slate-700 break-all">{{ $hop['from'] ?: '—' }}</td>
-                                <td class="py-1.5 pr-3 font-mono text-slate-700 break-all">{{ $hop['by'] ?: '—' }}</td>
+                                <td class="py-1.5 pr-3 break-all">
+                                    @php $f = $hop['from']; @endphp
+                                    @if (is_array($f))
+                                        @if ($f['host']) <span class="font-mono text-slate-700">{{ $f['host'] }}</span> @endif
+                                        @if ($f['rdns'] && $f['rdns'] !== $f['host']) <span class="block font-mono text-xs text-slate-500">{{ $f['rdns'] }}</span> @endif
+                                        @if ($f['ip']) <span class="block font-mono text-xs text-emerald-700">[{{ $f['ip'] }}]</span> @endif
+                                        @if (! $f['host'] && ! $f['rdns'] && ! $f['ip']) <span class="text-slate-400">—</span> @endif
+                                    @else
+                                        <span class="font-mono text-slate-700">{{ $f ?: '—' }}</span>
+                                    @endif
+                                </td>
+                                <td class="py-1.5 pr-3 break-all">
+                                    @php $b = $hop['by']; @endphp
+                                    @if (is_array($b))
+                                        @if ($b['host']) <span class="font-mono text-slate-700">{{ $b['host'] }}</span> @endif
+                                        @if ($b['rdns'] && $b['rdns'] !== $b['host']) <span class="block font-mono text-xs text-slate-500">{{ $b['rdns'] }}</span> @endif
+                                        @if ($b['ip']) <span class="block font-mono text-xs text-emerald-700">[{{ $b['ip'] }}]</span> @endif
+                                        @if (! $b['host'] && ! $b['rdns'] && ! $b['ip']) <span class="text-slate-400">—</span> @endif
+                                    @else
+                                        <span class="font-mono text-slate-700">{{ $b ?: '—' }}</span>
+                                    @endif
+                                </td>
                                 <td class="py-1.5 pr-3 text-slate-600 whitespace-nowrap">{{ $hop['timestamp'] ?: '—' }}</td>
                                 <td class="py-1.5">
                                     @if ($hop['delay_seconds'] !== null)
