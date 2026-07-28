@@ -436,6 +436,35 @@ return [
         'empty'           => 'Inserisci un indirizzo MAC per identificare il produttore.',
         'error_required'  => "L'indirizzo MAC è obbligatorio.",
         'error_invalid'   => "Indirizzo MAC non valido. Formati accettati: AA:BB:CC (solo OUI) oppure AA:BB:CC:DD:EE:FF (MAC completo), con separatori : - . o senza.",
+
+        // ── Virtual context ───────────────────────────────────────────────────
+        'virtual_section'        => 'Contesto Virtuale',
+        'virtual_badge_certain'  => 'Virtuale',
+        'virtual_badge_probable' => 'Probabilmente virtuale',
+        'virtual_platform_label' => 'Piattaforma',
+        'virtual_uses_label'     => 'Utilizzo tipico',
+
+        'virtual_desc_vmware'          => 'Questo OUI è assegnato da IEEE a VMware. Indica quasi certamente un\'interfaccia di rete di una macchina virtuale VMware.',
+        'virtual_desc_vmware_esxi'     => 'Il prefisso 00:50:56 con quarto ottetto ≥ 40 è generato automaticamente da VMware ESXi / vSphere per le VM ospitate sul cluster.',
+        'virtual_desc_virtualbox'      => 'L\'OUI 08:00:27 è assegnato da IEEE a Oracle per VirtualBox. Indica una VM VirtualBox in esecuzione su Windows, Linux o macOS.',
+        'virtual_desc_hyper_v'         => 'OUI riservato da Microsoft per Hyper-V. Usato dalle VM Hyper-V su Windows Server e desktop, e dai virtual switch di WSL 2.',
+        'virtual_desc_azure'           => 'OUI usato da Microsoft Azure per le interfacce di rete delle VM cloud. Indica una NIC virtuale associata a una VM ospitata su Azure.',
+        'virtual_desc_xen'             => 'OUI riservato per Xen Hypervisor e Citrix XenServer. Usato storicamente anche da AWS EC2 sulle istanze basate su Xen (precedenti al Nitro).',
+        'virtual_desc_parallels'       => 'OUI assegnato a Parallels per le VM su macOS (Parallels Desktop). Indica una macchina virtuale Windows, Linux o altra ospitata su Mac.',
+        'virtual_desc_qemu_kvm'        => 'Il prefisso 52:54:00 è lo standard de-facto per QEMU/KVM. Usato da libvirt, Proxmox VE, oVirt, e qualsiasi stack basato su KVM. Il bit L è impostato (locally administered) per convenzione.',
+        'virtual_desc_docker'          => 'Il prefisso 02:42 è assegnato da Docker alle interfacce dei container. Il bridge docker0 usa questo range per distinguere il traffico di rete dei container da quello fisico.',
+        'virtual_desc_la_generic'      => 'Il bit "Locally Administered" (L) è impostato nel primo ottetto: questo indirizzo non è stato assegnato da IEEE ma generato o configurato localmente. Può indicare diverse situazioni.',
+
+        'virtual_uses_vmware'          => 'VM VMware Workstation o Fusion|VM su VMware ESXi / vSphere|Template e clone di VM',
+        'virtual_uses_vmware_esxi'     => 'VM gestita da VMware ESXi o vCenter|Snapshot e cloni di VM su cluster vSphere|VM create con vSphere Web Client o API',
+        'virtual_uses_virtualbox'      => 'VM VirtualBox su host Windows, Linux o macOS|Ambienti di sviluppo e test isolati|Lab virtuali e snapshot',
+        'virtual_uses_hyper_v'         => 'VM Hyper-V su Windows Server o Windows 10/11|Switch virtuale interno o esterno di Hyper-V|Interfaccia di rete di WSL 2 (Windows Subsystem for Linux)',
+        'virtual_uses_azure'           => 'NIC virtuale di una VM Azure (IaaS)|Interfaccia di Azure Virtual Network|VM Azure con accelerated networking (SR-IOV)',
+        'virtual_uses_xen'             => 'VM su Xen Hypervisor o Citrix XenServer|Istanza AWS EC2 su infrastruttura Xen (pre-Nitro)|Nodo di un cluster OpenStack basato su Xen',
+        'virtual_uses_parallels'       => 'VM Windows o Linux su Parallels Desktop per Mac|Ambiente di sviluppo cross-platform su macOS|VM con accesso a device hardware macOS condivisi',
+        'virtual_uses_qemu_kvm'        => 'VM KVM gestita da libvirt (virt-manager, virsh)|Nodo di un cluster Proxmox VE|VM su oVirt / Red Hat Virtualization|Emulazione QEMU per architetture diverse da x86',
+        'virtual_uses_docker'          => 'Container Docker collegato al bridge di default (docker0)|Interfaccia veth di un container in una rete bridge personalizzata|Container in Docker Compose con rete interna',
+        'virtual_uses_la_generic'      => 'Randomizzazione MAC Wi-Fi (iOS 14+, Android 10+, Windows 10/11)|Interfaccia VPN o tunnel (OpenVPN, WireGuard, GRE)|Virtual switch SDN (Open vSwitch, Linux bridge)|Bonding/teaming su Linux con MAC generato localmente|MAC configurato manualmente dall\'amministratore',
     ],
 
     'whois' => [

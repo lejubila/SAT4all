@@ -84,4 +84,50 @@
             @endif
         </div>
     </div>
+
+    {{-- Virtual context card — only shown when detected --}}
+    @php $virt = $result['virtual'] ?? null; @endphp
+    @if ($virt !== null)
+        @php
+            $vType    = $virt['type'];
+            $descKey  = 'tools.mac_lookup.virtual_desc_' . $vType;
+            $usesKey  = 'tools.mac_lookup.virtual_uses_' . $vType;
+            $usesList = explode('|', __($usesKey));
+            $certain  = $virt['certain'];
+        @endphp
+        <div class="mt-4 rounded-lg border {{ $certain ? 'border-violet-200 bg-violet-50' : 'border-amber-200 bg-amber-50' }} p-4 shadow-sm">
+            <div class="mb-3 flex items-center gap-2">
+                <span class="text-sm font-semibold {{ $certain ? 'text-violet-700' : 'text-amber-700' }}">
+                    {{ __('tools.mac_lookup.virtual_section') }}
+                </span>
+                <span class="rounded-full px-2.5 py-0.5 text-xs font-bold
+                             {{ $certain ? 'bg-violet-200 text-violet-800' : 'bg-amber-200 text-amber-800' }}">
+                    {{ $certain ? __('tools.mac_lookup.virtual_badge_certain') : __('tools.mac_lookup.virtual_badge_probable') }}
+                </span>
+                @if ($virt['platform'])
+                    <span class="ml-auto font-mono text-xs {{ $certain ? 'text-violet-600' : 'text-amber-600' }}">
+                        {{ $virt['platform'] }}
+                    </span>
+                @endif
+            </div>
+
+            <p class="mb-3 text-sm {{ $certain ? 'text-violet-800' : 'text-amber-800' }}">
+                {{ __($descKey) }}
+            </p>
+
+            <div>
+                <p class="mb-1.5 text-xs font-semibold uppercase tracking-wide {{ $certain ? 'text-violet-600' : 'text-amber-600' }}">
+                    {{ __('tools.mac_lookup.virtual_uses_label') }}
+                </p>
+                <ul class="space-y-1">
+                    @foreach ($usesList as $use)
+                        <li class="flex items-start gap-2 text-sm {{ $certain ? 'text-violet-700' : 'text-amber-700' }}">
+                            <span class="mt-0.5 shrink-0 text-xs">›</span>
+                            <span>{{ $use }}</span>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    @endif
 @endif

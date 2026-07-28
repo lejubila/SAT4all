@@ -171,4 +171,86 @@ class MacLookupTest extends TestCase
         $vendor = DB::table('oui_vendors')->where('prefix', '005056')->value('vendor');
         $this->assertSame('VMware Inc.', $vendor);
     }
+
+    // ── Virtual context detection ────────────────────────────────────────────
+
+    public function test_vmware_oui_detected_as_virtual(): void
+    {
+        $result = MacLookup::lookup('00:0C:29:AB:CD:EF');
+        $this->assertNotNull($result['virtual']);
+        $this->assertSame('vmware', $result['virtual']['type']);
+        $this->assertTrue($result['virtual']['certain']);
+    }
+
+    public function test_vmware_esxi_range_detected(): void
+    {
+        // 00:50:56:40:xx:xx → fourth octet 0x40 ≥ 0x40 → ESXi
+        $result = MacLookup::lookup('00:50:56:40:AB:CD');
+        $this->assertSame('vmware_esxi', $result['virtual']['type']);
+
+        // 00:50:56:3F:xx:xx → fourth octet 0x3F < 0x40 → Workstation/Fusion
+        $result2 = MacLookup::lookup('00:50:56:3F:AB:CD');
+        $this->assertSame('vmware', $result2['virtual']['type']);
+    }
+
+    public function test_virtualbox_oui_detected(): void
+    {
+        $result = MacLookup::lookup('08:00:27:AB:CD:EF');
+        $this->assertNotNull($result['virtual']);
+        $this->assertSame('virtualbox', $result['virtual']['type']);
+    }
+
+    public function test_hyper_v_oui_detected(): void
+    {
+        $result = MacLookup::lookup('00:15:5D:AB:CD:EF');
+        $this->assertSame('hyper_v', $result['virtual']['type']);
+    }
+
+    public function test_xen_oui_detected(): void
+    {
+        $result = MacLookup::lookup('00:16:3E:AB:CD:EF');
+        $this->assertSame('xen', $result['virtual']['type']);
+    }
+
+    public function test_qemu_kvm_prefix_detected(): void
+    {
+        $result = MacLookup::lookup('52:54:00:AB:CD:EF');
+        $this->assertSame('qemu_kvm', $result['virtual']['type']);
+        $this->assertTrue($result['virtual']['certain']);
+    }
+
+    public function test_docker_prefix_detected(): void
+    {
+        $result = MacLookup::lookup('02:42:AC:11:00:02');
+        $this->assertSame('docker', $result['virtual']['type']);
+    }
+
+    public function test_la_generic_for_unknown_local_mac(): void
+    {
+        // 02:xx:xx:xx:xx:xx that is NOT a known virtual prefix
+        $result = MacLookup::lookup('02:11:22:33:44:55');
+        $this->assertSame('la_generic', $result['virtual']['type']);
+        $this->assertFalse($result['virtual']['certain']);
+    }
+
+    public function test_physical_mac_has_no_virtual_context(): void
+    {
+        $result = MacLookup::lookup('B8:27:EB:AB:CD:EF');
+        $this->assertNull($result['virtual']);
+    }
+
+    public function test_virtual_context_section_shown_in_http_response(): void
+    {
+        $this->post(route('tools.mac-lookup.lookup'), ['mac' => '00:0C:29:AB:CD:EF'])
+            ->assertOk()
+            ->assertSee(__('tools.mac_lookup.virtual_section'))
+            ->assertSee(__('tools.mac_lookup.virtual_badge_certain'));
+    }
+
+    public function test_qemu_virtual_section_shown_in_http_response(): void
+    {
+        $this->post(route('tools.mac-lookup.lookup'), ['mac' => '52:54:00:12:34:56'])
+            ->assertOk()
+            ->assertSee('QEMU');
+    }
 }

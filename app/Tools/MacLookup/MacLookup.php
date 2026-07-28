@@ -535,6 +535,7 @@ class MacLookup
             'oui_only'            => $ouiOnly,
             'multicast'           => $multicast,
             'locally_administered'=> $locally,
+            'virtual'             => self::detectVirtual($normalized, $locally),
             'error'               => null,
         ];
 
@@ -544,6 +545,64 @@ class MacLookup
         }
 
         return $result;
+    }
+
+    /**
+     * Detect virtual/software-generated MAC address context.
+     * Returns null for ordinary physical hardware MACs.
+     */
+    public static function detectVirtual(string $normalized, bool $locallyAdministered): ?array
+    {
+        $oui  = strtoupper(substr($normalized, 0, 6));
+        $full = strlen($normalized) === 12;
+
+        // ── Globally-assigned OUIs dedicated to virtualisation ────────────────
+        $globalVirtual = [
+            '000569' => ['type' => 'vmware',      'platform' => 'VMware',                   'certain' => true],
+            '000C29' => ['type' => 'vmware',      'platform' => 'VMware Workstation/Fusion', 'certain' => true],
+            '001C14' => ['type' => 'vmware',      'platform' => 'VMware',                   'certain' => true],
+            '080027' => ['type' => 'virtualbox',  'platform' => 'Oracle VirtualBox',         'certain' => true],
+            '00155D' => ['type' => 'hyper_v',     'platform' => 'Microsoft Hyper-V / WSL 2', 'certain' => true],
+            '000D3A' => ['type' => 'azure',       'platform' => 'Microsoft Azure',            'certain' => true],
+            '00163E' => ['type' => 'xen',         'platform' => 'Xen / Citrix XenServer',    'certain' => true],
+            '001C42' => ['type' => 'parallels',   'platform' => 'Parallels Desktop',          'certain' => true],
+        ];
+
+        // VMware ESXi 00:50:56 — sub-range determines Workstation vs ESXi
+        if ($oui === '005056') {
+            $subtype = 'vmware';
+            $label   = 'VMware Workstation/Fusion';
+            if ($full) {
+                $fourth = hexdec(substr($normalized, 6, 2));
+                if ($fourth >= 0x40) {
+                    $subtype = 'vmware_esxi';
+                    $label   = 'VMware ESXi / vSphere';
+                }
+            }
+            return ['type' => $subtype, 'platform' => $label, 'certain' => true];
+        }
+
+        if (isset($globalVirtual[$oui])) {
+            return $globalVirtual[$oui];
+        }
+
+        // ── Locally-administered address patterns ─────────────────────────────
+        if ($locallyAdministered) {
+            // QEMU/KVM: 52:54:00 is the de-facto libvirt/Proxmox/KVM prefix
+            if (str_starts_with($oui, '525400')) {
+                return ['type' => 'qemu_kvm', 'platform' => 'QEMU / KVM', 'certain' => true];
+            }
+
+            // Docker containers: bridge assigns 02:42:xx:xx:xx:xx
+            if ($full && str_starts_with($normalized, '0242')) {
+                return ['type' => 'docker', 'platform' => 'Docker', 'certain' => true];
+            }
+
+            // Generic locally-administered — could be WiFi randomisation, VPN, SDN…
+            return ['type' => 'la_generic', 'platform' => null, 'certain' => false];
+        }
+
+        return null;
     }
 
     // Try DB first; fall back to embedded array.
