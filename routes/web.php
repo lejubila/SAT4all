@@ -74,6 +74,9 @@ Route::prefix('tools')->name('tools.')->group(function (): void {
     Route::post('dns-lookup', [DnsLookupController::class, 'lookup'])
         ->name('dns-lookup.lookup')
         ->middleware('throttle:dns-lookup');
+    Route::post('dns-lookup/propagation', [DnsLookupController::class, 'propagation'])
+        ->name('dns-lookup.propagation')
+        ->middleware('throttle:dns-lookup');
 
     Route::get('ip-geolocation', [IpGeolocationController::class, 'index'])
         ->name('ip-geolocation.index');

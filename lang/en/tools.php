@@ -201,6 +201,22 @@ return [
         'error_throttle'      => 'Too many requests: 60 queries per second limit reached. Please wait a moment.',
 
         'cname_resolved_ips'  => 'Resolved IPs',
+
+        'tab_single'      => 'Single query',
+        'tab_propagation' => 'Propagation',
+
+        'prop_description' => 'Queries 16 public DNS resolvers worldwide and compares answers to check propagation status.',
+        'prop_button'      => 'Check propagation',
+
+        'prop_status_propagated'  => 'Propagated — all resolvers agree',
+        'prop_status_propagating' => 'Propagating — inconsistent answers detected',
+        'prop_agreement'   => ':agree/:total resolvers in agreement',
+        'prop_timeout'     => ':n timeout(s)',
+        'prop_timeout_label' => 'Timeout',
+        'prop_error_label'   => 'Error',
+
+        'prop_col_server' => 'Server',
+        'prop_col_result' => 'Answer',
     ],
 
     'ip_geolocation' => [

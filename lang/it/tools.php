@@ -201,6 +201,22 @@ return [
         'error_throttle'      => 'Troppe richieste: limite di 60 query al secondo raggiunto. Riprova tra un momento.',
 
         'cname_resolved_ips'  => 'IP risolti',
+
+        'tab_single'      => 'Query singola',
+        'tab_propagation' => 'Propagazione',
+
+        'prop_description' => 'Interroga 16 resolver DNS pubblici nel mondo e confronta le risposte per verificare la propagazione.',
+        'prop_button'      => 'Verifica propagazione',
+
+        'prop_status_propagated'  => 'Propagato — tutti i resolver concordano',
+        'prop_status_propagating' => 'In propagazione — risposte discordanti rilevate',
+        'prop_agreement'   => ':agree/:total resolver in accordo',
+        'prop_timeout'     => ':n timeout',
+        'prop_timeout_label' => 'Timeout',
+        'prop_error_label'   => 'Errore',
+
+        'prop_col_server' => 'Server',
+        'prop_col_result' => 'Risposta',
     ],
 
     'ip_geolocation' => [

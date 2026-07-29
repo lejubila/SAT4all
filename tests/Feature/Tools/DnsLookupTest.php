@@ -3,6 +3,7 @@
 namespace Tests\Feature\Tools;
 
 use App\Tools\DnsLookup\DnsLookup;
+use App\Tools\DnsLookup\DnsPropagation;
 use Tests\TestCase;
 
 class DnsLookupTest extends TestCase
@@ -84,5 +85,75 @@ class DnsLookupTest extends TestCase
         $this->assertSame('A', $result['type']);
         $this->assertIsArray($result['records']);
         $this->assertSame(count($result['records']), $result['count']);
+    }
+
+    // ── Propagation ──────────────────────────────────────────────────────────
+
+    public function test_propagation_page_shows_both_tabs(): void
+    {
+        $this->get(route('tools.dns-lookup.index'))
+            ->assertOk()
+            ->assertSee(__('tools.dns_lookup.tab_single'))
+            ->assertSee(__('tools.dns_lookup.tab_propagation'));
+    }
+
+    public function test_propagation_supported_types(): void
+    {
+        $types = DnsPropagation::supportedTypes();
+
+        foreach (['A', 'AAAA', 'MX', 'CNAME', 'TXT', 'NS'] as $expected) {
+            $this->assertContains($expected, $types);
+        }
+    }
+
+    public function test_propagation_returns_correct_structure(): void
+    {
+        $result = (new DnsPropagation)->check('example.com', 'A');
+
+        $this->assertArrayHasKey('host',       $result);
+        $this->assertArrayHasKey('type',       $result);
+        $this->assertArrayHasKey('results',    $result);
+        $this->assertArrayHasKey('consistent', $result);
+        $this->assertArrayHasKey('majority',   $result);
+        $this->assertArrayHasKey('agreeing',   $result);
+        $this->assertArrayHasKey('responding', $result);
+        $this->assertArrayHasKey('total',      $result);
+        $this->assertSame('example.com', $result['host']);
+        $this->assertSame('A', $result['type']);
+        $this->assertCount(16, $result['results']);
+    }
+
+    public function test_propagation_result_has_status_field(): void
+    {
+        $result = (new DnsPropagation)->check('example.com', 'A');
+
+        foreach ($result['results'] as $row) {
+            $this->assertArrayHasKey('status', $row);
+            $this->assertContains($row['status'], ['match', 'mismatch', 'nxdomain', 'error']);
+        }
+    }
+
+    public function test_propagation_http_endpoint_returns_ok(): void
+    {
+        $this->post(route('tools.dns-lookup.propagation'), ['host' => 'example.com', 'type' => 'A'])
+            ->assertOk()
+            ->assertSee('example.com');
+    }
+
+    public function test_propagation_empty_host_returns_validation_error(): void
+    {
+        $this->post(route('tools.dns-lookup.propagation'), ['host' => '', 'type' => 'A'])
+            ->assertOk()
+            ->assertSee(__('tools.dns_lookup.error_host_required'));
+    }
+
+    public function test_propagation_throttle_applied(): void
+    {
+        $route = collect(app('router')->getRoutes())->first(
+            fn ($r) => $r->getName() === 'tools.dns-lookup.propagation'
+        );
+
+        $this->assertNotNull($route);
+        $this->assertContains('throttle:dns-lookup', $route->middleware());
     }
 }
