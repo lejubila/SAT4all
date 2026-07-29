@@ -199,6 +199,8 @@ return [
         'error_type_required' => 'Il tipo di record è obbligatorio.',
         'error_type_invalid'  => 'Il tipo di record selezionato non è valido.',
         'error_throttle'      => 'Troppe richieste: limite di 60 query al secondo raggiunto. Riprova tra un momento.',
+
+        'cname_resolved_ips'  => 'IP risolti',
     ],
 
     'ip_geolocation' => [

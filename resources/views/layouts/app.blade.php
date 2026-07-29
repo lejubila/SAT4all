@@ -30,124 +30,83 @@
                         {{ __('ui.nav_tools') }}
                         <span class="text-xs" x-text="open ? '▲' : '▼'"></span>
                     </button>
+
+                    {{-- Mega-menu: griglia 3×2 colonne per categoria --}}
                     <div x-show="open" x-cloak x-transition
-                         class="absolute right-0 z-10 mt-2 w-56 rounded-md border border-slate-200 bg-white py-1 text-slate-700 shadow-lg">
-                        <a href="{{ route('tools.subnet-calculator.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.subnet_calculator.menu') }}
-                        </a>
-                        <a href="{{ route('tools.ipv6-calculator.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.ipv6_calculator.menu') }}
-                        </a>
-                        <a href="{{ route('tools.port-reference.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.port_reference.menu') }}
-                        </a>
-                        <a href="{{ route('tools.cable-schemas.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.cable_schemas.menu') }}
-                        </a>
-                        <a href="{{ route('tools.cidr-cheatsheet.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.cidr_cheatsheet.menu') }}
-                        </a>
-                        <div class="my-1 border-t border-slate-100"></div>
-                        <a href="{{ route('tools.vlan-calculator.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.vlan_calculator.menu') }}
-                        </a>
-                        <a href="{{ route('tools.dns-lookup.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.dns_lookup.menu') }}
-                        </a>
-                        <a href="{{ route('tools.ip-geolocation.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.ip_geolocation.menu') }}
-                        </a>
-                        <a href="{{ route('tools.osi-model.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.osi_model.menu') }}
-                        </a>
-                        <a href="{{ route('tools.ping-traceroute.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.ping_traceroute.menu') }}
-                        </a>
-                        <div class="my-1 border-t border-slate-100"></div>
-                        <a href="{{ route('tools.email-header-analyzer.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.email_header_analyzer.menu') }}
-                        </a>
-                        <a href="{{ route('tools.email-deliverability.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.email_deliverability.menu') }}
-                        </a>
-                        <a href="{{ route('tools.blacklist-checker.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.blacklist_checker.menu') }}
-                        </a>
-                        <a href="{{ route('tools.mx-checker.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.mx_checker.menu') }}
-                        </a>
-                        <a href="{{ route('tools.email-validator.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.email_validator.menu') }}
-                        </a>
-                        <div class="my-1 border-t border-slate-100"></div>
-                        <a href="{{ route('tools.linux-cheatsheet.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.linux_cheatsheet.menu') }}
-                        </a>
-                        <a href="{{ route('tools.cable-colors.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.cable_colors.menu') }}
-                        </a>
-                        <a href="{{ route('tools.rfc-browser.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.rfc_browser.menu') }}
-                        </a>
-                        <div class="my-1 border-t border-slate-100"></div>
-                        <a href="{{ route('tools.whois.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.whois.menu') }}
-                        </a>
-                        <a href="{{ route('tools.mac-lookup.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.mac_lookup.menu') }}
-                        </a>
-                        <a href="{{ route('tools.http-status-codes.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.http_status_codes.menu') }}
-                        </a>
-                        <a href="{{ route('tools.regex-tester.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.regex_tester.menu') }}
-                        </a>
-                        <a href="{{ route('tools.ssl-checker.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.ssl_checker.menu') }}
-                        </a>
-                        <a href="{{ route('tools.port-checker.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.port_checker.menu') }}
-                        </a>
-                        <a href="{{ route('tools.base-converter.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.base_converter.menu') }}
-                        </a>
-                        <a href="{{ route('tools.bandwidth-calculator.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.bandwidth_calculator.menu') }}
-                        </a>
-                        <a href="{{ route('tools.formatter.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.formatter.menu') }}
-                        </a>
-                        <a href="{{ route('tools.markdown-viewer.index') }}"
-                           class="block px-4 py-2 text-sm hover:bg-slate-100">
-                            {{ __('tools.markdown_viewer.menu') }}
-                        </a>
+                         class="absolute right-0 z-10 mt-2 w-[680px] rounded-md border border-slate-200 bg-white p-5 text-slate-700 shadow-xl">
+                        <div class="grid grid-cols-3 gap-x-5 gap-y-5">
+
+                            {{-- Subnet & IP --}}
+                            <div>
+                                <p class="mb-2 text-[10px] font-bold uppercase tracking-wider text-emerald-600">{{ __('ui.group_subnet_ip') }}</p>
+                                <div class="space-y-0.5">
+                                    <a href="{{ route('tools.subnet-calculator.index') }}" class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.subnet_calculator.menu') }}</a>
+                                    <a href="{{ route('tools.ipv6-calculator.index') }}"  class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.ipv6_calculator.menu') }}</a>
+                                    <a href="{{ route('tools.cidr-cheatsheet.index') }}"  class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.cidr_cheatsheet.menu') }}</a>
+                                    <a href="{{ route('tools.vlan-calculator.index') }}"  class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.vlan_calculator.menu') }}</a>
+                                    <a href="{{ route('tools.ip-geolocation.index') }}"   class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.ip_geolocation.menu') }}</a>
+                                </div>
+                            </div>
+
+                            {{-- Diagnostica & Lookup --}}
+                            <div>
+                                <p class="mb-2 text-[10px] font-bold uppercase tracking-wider text-emerald-600">{{ __('ui.group_diagnostics') }}</p>
+                                <div class="space-y-0.5">
+                                    <a href="{{ route('tools.dns-lookup.index') }}"       class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.dns_lookup.menu') }}</a>
+                                    <a href="{{ route('tools.ping-traceroute.index') }}"  class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.ping_traceroute.menu') }}</a>
+                                    <a href="{{ route('tools.whois.index') }}"            class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.whois.menu') }}</a>
+                                    <a href="{{ route('tools.mac-lookup.index') }}"       class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.mac_lookup.menu') }}</a>
+                                    <a href="{{ route('tools.ssl-checker.index') }}"      class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.ssl_checker.menu') }}</a>
+                                    <a href="{{ route('tools.port-checker.index') }}"     class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.port_checker.menu') }}</a>
+                                </div>
+                            </div>
+
+                            {{-- Riferimenti --}}
+                            <div>
+                                <p class="mb-2 text-[10px] font-bold uppercase tracking-wider text-emerald-600">{{ __('ui.group_references') }}</p>
+                                <div class="space-y-0.5">
+                                    <a href="{{ route('tools.port-reference.index') }}"   class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.port_reference.menu') }}</a>
+                                    <a href="{{ route('tools.osi-model.index') }}"        class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.osi_model.menu') }}</a>
+                                    <a href="{{ route('tools.linux-cheatsheet.index') }}" class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.linux_cheatsheet.menu') }}</a>
+                                    <a href="{{ route('tools.http-status-codes.index') }}" class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.http_status_codes.menu') }}</a>
+                                    <a href="{{ route('tools.rfc-browser.index') }}"      class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.rfc_browser.menu') }}</a>
+                                </div>
+                            </div>
+
+                            {{-- Email --}}
+                            <div>
+                                <p class="mb-2 text-[10px] font-bold uppercase tracking-wider text-emerald-600">{{ __('ui.group_email') }}</p>
+                                <div class="space-y-0.5">
+                                    <a href="{{ route('tools.email-header-analyzer.index') }}" class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.email_header_analyzer.menu') }}</a>
+                                    <a href="{{ route('tools.email-deliverability.index') }}"  class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.email_deliverability.menu') }}</a>
+                                    <a href="{{ route('tools.blacklist-checker.index') }}"     class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.blacklist_checker.menu') }}</a>
+                                    <a href="{{ route('tools.mx-checker.index') }}"            class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.mx_checker.menu') }}</a>
+                                    <a href="{{ route('tools.email-validator.index') }}"       class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.email_validator.menu') }}</a>
+                                </div>
+                            </div>
+
+                            {{-- Strumenti --}}
+                            <div>
+                                <p class="mb-2 text-[10px] font-bold uppercase tracking-wider text-emerald-600">{{ __('ui.group_tools') }}</p>
+                                <div class="space-y-0.5">
+                                    <a href="{{ route('tools.regex-tester.index') }}"         class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.regex_tester.menu') }}</a>
+                                    <a href="{{ route('tools.base-converter.index') }}"        class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.base_converter.menu') }}</a>
+                                    <a href="{{ route('tools.bandwidth-calculator.index') }}"  class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.bandwidth_calculator.menu') }}</a>
+                                    <a href="{{ route('tools.formatter.index') }}"             class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.formatter.menu') }}</a>
+                                    <a href="{{ route('tools.markdown-viewer.index') }}"       class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.markdown_viewer.menu') }}</a>
+                                </div>
+                            </div>
+
+                            {{-- Cablaggio --}}
+                            <div>
+                                <p class="mb-2 text-[10px] font-bold uppercase tracking-wider text-emerald-600">{{ __('ui.group_cabling') }}</p>
+                                <div class="space-y-0.5">
+                                    <a href="{{ route('tools.cable-schemas.index') }}" class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.cable_schemas.menu') }}</a>
+                                    <a href="{{ route('tools.cable-colors.index') }}"  class="block rounded px-2 py-1 text-sm hover:bg-slate-100">{{ __('tools.cable_colors.menu') }}</a>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
 

@@ -63,11 +63,23 @@ class DnsLookup
             ];
         }
 
+        $records = array_map([$this, 'normalize'], $raw);
+
+        foreach ($records as &$rec) {
+            if ($rec['type'] === 'CNAME' && ! empty($rec['target'])) {
+                $ips = $this->resolveCnameTarget($rec['target']);
+                if ($ips !== []) {
+                    $rec['cname_ips'] = $ips;
+                }
+            }
+        }
+        unset($rec);
+
         return [
             'host'    => $this->host,
             'type'    => $this->type,
-            'records' => array_map([$this, 'normalize'], $raw),
-            'count'   => count($raw),
+            'records' => $records,
+            'count'   => count($records),
             'error'   => null,
         ];
     }
@@ -125,6 +137,36 @@ class DnsLookup
         };
 
         return array_merge(['type' => $type, 'ttl' => $ttl], array_map('strval', $data));
+    }
+
+    /**
+     * Risolve gli indirizzi A/AAAA del target di un record CNAME.
+     *
+     * @return array<int, string>
+     */
+    private function resolveCnameTarget(string $target): array
+    {
+        $ips = [];
+
+        $aRecords = @dns_get_record($target, DNS_A);
+        if ($aRecords) {
+            foreach ($aRecords as $r) {
+                if (isset($r['ip'])) {
+                    $ips[] = $r['ip'];
+                }
+            }
+        }
+
+        $aaaaRecords = @dns_get_record($target, DNS_AAAA);
+        if ($aaaaRecords) {
+            foreach ($aaaaRecords as $r) {
+                if (isset($r['ipv6'])) {
+                    $ips[] = $r['ipv6'];
+                }
+            }
+        }
+
+        return $ips;
     }
 
     /**

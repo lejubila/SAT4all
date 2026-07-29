@@ -199,6 +199,8 @@ return [
         'error_type_required' => 'The record type is required.',
         'error_type_invalid'  => 'The selected record type is not valid.',
         'error_throttle'      => 'Too many requests: 60 queries per second limit reached. Please wait a moment.',
+
+        'cname_resolved_ips'  => 'Resolved IPs',
     ],
 
     'ip_geolocation' => [

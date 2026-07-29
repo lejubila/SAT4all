@@ -51,7 +51,7 @@
                                 <td class="px-4 py-2 font-mono text-slate-500">{{ $rec['ttl'] }}</td>
                                 <td class="px-4 py-2">
                                     @php
-                                        $data = array_diff_key($rec, array_flip(['type', 'ttl']));
+                                        $data = array_diff_key($rec, array_flip(['type', 'ttl', 'cname_ips']));
                                     @endphp
                                     @foreach ($data as $key => $val)
                                         <div class="flex gap-2 font-mono text-sm">
@@ -59,6 +59,18 @@
                                             <span class="break-all text-slate-800">{{ $val }}</span>
                                         </div>
                                     @endforeach
+                                    @if (! empty($rec['cname_ips']))
+                                        <div class="mt-1.5 flex flex-wrap items-center gap-1.5">
+                                            <span class="shrink-0 font-mono text-xs text-slate-400">
+                                                {{ __('tools.dns_lookup.cname_resolved_ips') }}:
+                                            </span>
+                                            @foreach ($rec['cname_ips'] as $ip)
+                                                <span class="rounded bg-emerald-100 px-2 py-0.5 font-mono text-xs font-semibold text-emerald-800">
+                                                    {{ $ip }}
+                                                </span>
+                                            @endforeach
+                                        </div>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
