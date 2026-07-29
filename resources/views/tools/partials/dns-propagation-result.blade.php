@@ -12,7 +12,7 @@
     <div class="flex flex-wrap items-center gap-3 rounded-lg border
                 {{ $consistent ? 'border-emerald-200 bg-emerald-50' : 'border-amber-200 bg-amber-50' }}
                 px-4 py-3 shadow-sm">
-        <span class="text-lg">{{ $consistent ? '✔' : '⚠' }}</span>
+        <span class="text-xl">{{ $consistent ? '✔' : '⚠' }}</span>
         <div class="flex-1">
             <p class="text-sm font-semibold {{ $consistent ? 'text-emerald-800' : 'text-amber-800' }}">
                 {{ $consistent
@@ -44,6 +44,7 @@
         <table class="w-full text-sm">
             <thead class="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
                 <tr>
+                    <th class="px-3 py-2 text-left font-medium w-8"></th>
                     <th class="px-3 py-2 text-left font-medium">{{ __('tools.dns_lookup.prop_col_server') }}</th>
                     <th class="px-3 py-2 text-left font-medium">{{ __('tools.dns_lookup.prop_col_result') }}</th>
                 </tr>
@@ -53,34 +54,40 @@
                     @php
                         $status = $row['status'];
                         $rowBg  = match ($status) {
-                            'match'    => '',
                             'mismatch' => 'bg-amber-50',
                             'nxdomain' => 'bg-slate-50',
                             default    => '',
                         };
                     @endphp
-                    <tr class="{{ $rowBg }} hover:bg-slate-50">
-                        {{-- Server --}}
-                        <td class="px-3 py-2">
+                    <tr class="{{ $rowBg }} hover:bg-slate-50/80">
+
+                        {{-- Flag --}}
+                        <td class="px-3 py-2.5 text-center">
+                            <span class="text-2xl leading-none" title="{{ $row['location'] }}">{{ $row['flag'] }}</span>
+                        </td>
+
+                        {{-- Server info --}}
+                        <td class="px-3 py-2.5">
                             <div class="flex items-center gap-2">
-                                {{-- Status indicator --}}
-                                <span class="shrink-0 text-base leading-none">
-                                    @if ($status === 'match')   <span class="text-emerald-500">●</span>
+                                {{-- Status dot --}}
+                                <span class="shrink-0 text-xs leading-none">
+                                    @if ($status === 'match')        <span class="text-emerald-500">●</span>
                                     @elseif ($status === 'mismatch') <span class="text-amber-500">●</span>
                                     @elseif ($status === 'nxdomain') <span class="text-slate-400">●</span>
-                                    @else                        <span class="text-slate-300">●</span>
+                                    @else                            <span class="text-slate-300">●</span>
                                     @endif
                                 </span>
-                                <span class="text-base leading-none" title="{{ $row['location'] }}">{{ $row['flag'] }}</span>
                                 <div>
-                                    <p class="font-medium text-slate-800">{{ $row['name'] }}</p>
-                                    <p class="font-mono text-xs text-slate-400">{{ $row['ip'] }}&nbsp;·&nbsp;{{ $row['location'] }}</p>
+                                    <p class="font-medium text-slate-800 leading-tight">{{ $row['name'] }}</p>
+                                    <p class="text-xs text-slate-400 leading-tight">
+                                        {{ $row['location'] }}&nbsp;·&nbsp;<span class="font-mono">{{ $row['ip'] }}</span>
+                                    </p>
                                 </div>
                             </div>
                         </td>
 
-                        {{-- Result --}}
-                        <td class="px-3 py-2">
+                        {{-- Answer --}}
+                        <td class="px-3 py-2.5">
                             @if ($status === 'error')
                                 <span class="text-xs italic text-slate-400">
                                     {{ $row['error'] === 'timeout'

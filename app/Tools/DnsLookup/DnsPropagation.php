@@ -20,22 +20,35 @@ class DnsPropagation
     ];
 
     private const SERVERS = [
-        ['ip' => '8.8.8.8',         'name' => 'Google',      'flag' => '🇺🇸', 'location' => 'United States'],
-        ['ip' => '1.1.1.1',         'name' => 'Cloudflare',  'flag' => '🇺🇸', 'location' => 'United States'],
-        ['ip' => '208.67.222.222',  'name' => 'OpenDNS',     'flag' => '🇺🇸', 'location' => 'United States'],
-        ['ip' => '64.6.64.6',       'name' => 'Verisign',    'flag' => '🇺🇸', 'location' => 'United States'],
-        ['ip' => '9.9.9.9',         'name' => 'Quad9',       'flag' => '🇨🇭', 'location' => 'Switzerland'],
-        ['ip' => '84.200.69.80',    'name' => 'DNS.WATCH',   'flag' => '🇩🇪', 'location' => 'Germany'],
-        ['ip' => '77.88.8.8',       'name' => 'Yandex',      'flag' => '🇷🇺', 'location' => 'Russia'],
-        ['ip' => '94.140.14.14',    'name' => 'AdGuard',     'flag' => '🇷🇺', 'location' => 'Russia'],
-        ['ip' => '114.114.114.114', 'name' => '114DNS',      'flag' => '🇨🇳', 'location' => 'China'],
-        ['ip' => '223.5.5.5',       'name' => 'AliDNS',      'flag' => '🇨🇳', 'location' => 'China'],
-        ['ip' => '119.29.29.29',    'name' => 'DNSPod',      'flag' => '🇨🇳', 'location' => 'China'],
-        ['ip' => '168.95.1.1',      'name' => 'HiNet',       'flag' => '🇹🇼', 'location' => 'Taiwan'],
-        ['ip' => '203.248.252.2',   'name' => 'KT',          'flag' => '🇰🇷', 'location' => 'South Korea'],
-        ['ip' => '210.188.224.10',  'name' => 'IIJ',         'flag' => '🇯🇵', 'location' => 'Japan'],
-        ['ip' => '202.46.32.20',    'name' => 'IRIX',        'flag' => '🇸🇬', 'location' => 'Singapore'],
-        ['ip' => '1.0.0.1',         'name' => 'Cloudflare',  'flag' => '🇦🇺', 'location' => 'Australia'],
+        // ── Americas ─────────────────────────────────────────────────────────
+        ['ip' => '8.8.8.8',         'name' => 'Google',        'flag' => '🇺🇸', 'location' => 'United States'],
+        ['ip' => '1.1.1.1',         'name' => 'Cloudflare',    'flag' => '🇺🇸', 'location' => 'United States'],
+        ['ip' => '208.67.222.222',  'name' => 'OpenDNS',       'flag' => '🇺🇸', 'location' => 'United States'],
+        ['ip' => '149.112.121.10',  'name' => 'CIRA',          'flag' => '🇨🇦', 'location' => 'Canada'],
+        ['ip' => '200.221.11.100',  'name' => 'Embratel',      'flag' => '🇧🇷', 'location' => 'Brazil'],
+        // ── Europe ───────────────────────────────────────────────────────────
+        ['ip' => '9.9.9.9',         'name' => 'Quad9',         'flag' => '🇨🇭', 'location' => 'Switzerland'],
+        ['ip' => '84.200.69.80',    'name' => 'DNS.WATCH',     'flag' => '🇩🇪', 'location' => 'Germany'],
+        ['ip' => '80.67.169.40',    'name' => 'FDN',           'flag' => '🇫🇷', 'location' => 'France'],
+        ['ip' => '185.228.168.9',   'name' => 'CleanBrowsing', 'flag' => '🇮🇪', 'location' => 'Ireland'],
+        ['ip' => '77.88.8.8',       'name' => 'Yandex',        'flag' => '🇷🇺', 'location' => 'Russia'],
+        ['ip' => '94.140.14.14',    'name' => 'AdGuard',       'flag' => '🇷🇺', 'location' => 'Russia'],
+        // ── Middle East ──────────────────────────────────────────────────────
+        ['ip' => '213.42.20.20',    'name' => 'Etisalat',      'flag' => '🇦🇪', 'location' => 'UAE'],
+        // ── Africa ───────────────────────────────────────────────────────────
+        ['ip' => '196.25.1.1',      'name' => 'Telkom SA',     'flag' => '🇿🇦', 'location' => 'South Africa'],
+        // ── Asia ─────────────────────────────────────────────────────────────
+        ['ip' => '202.88.131.131',  'name' => 'TATA Comm',     'flag' => '🇮🇳', 'location' => 'India'],
+        ['ip' => '114.114.114.114', 'name' => '114DNS',        'flag' => '🇨🇳', 'location' => 'China'],
+        ['ip' => '223.5.5.5',       'name' => 'AliDNS',        'flag' => '🇨🇳', 'location' => 'China'],
+        ['ip' => '119.29.29.29',    'name' => 'DNSPod',        'flag' => '🇨🇳', 'location' => 'China'],
+        ['ip' => '168.95.1.1',      'name' => 'HiNet',         'flag' => '🇹🇼', 'location' => 'Taiwan'],
+        ['ip' => '203.248.252.2',   'name' => 'KT',            'flag' => '🇰🇷', 'location' => 'South Korea'],
+        ['ip' => '210.188.224.10',  'name' => 'IIJ',           'flag' => '🇯🇵', 'location' => 'Japan'],
+        ['ip' => '202.46.32.20',    'name' => 'IRIX',          'flag' => '🇸🇬', 'location' => 'Singapore'],
+        ['ip' => '180.131.144.144', 'name' => 'Telkom',        'flag' => '🇮🇩', 'location' => 'Indonesia'],
+        // ── Oceania ──────────────────────────────────────────────────────────
+        ['ip' => '1.0.0.1',         'name' => 'Cloudflare',    'flag' => '🇦🇺', 'location' => 'Australia'],
     ];
 
     public static function supportedTypes(): array

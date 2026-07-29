@@ -120,7 +120,7 @@ class DnsLookupTest extends TestCase
         $this->assertArrayHasKey('total',      $result);
         $this->assertSame('example.com', $result['host']);
         $this->assertSame('A', $result['type']);
-        $this->assertCount(16, $result['results']);
+        $this->assertCount(23, $result['results']);
     }
 
     public function test_propagation_result_has_status_field(): void
