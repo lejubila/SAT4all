@@ -31,10 +31,13 @@
                         <span class="text-xs" x-text="open ? '▲' : '▼'"></span>
                     </button>
 
-                    {{-- Mega-menu: griglia 3×2 colonne per categoria --}}
+                    {{-- Mega-menu: griglia responsive 1→2→3 colonne per categoria --}}
                     <div x-show="open" x-cloak x-transition
-                         class="absolute right-0 z-10 mt-2 w-[680px] rounded-md border border-slate-200 bg-white p-5 text-slate-700 shadow-xl">
-                        <div class="grid grid-cols-3 gap-x-5 gap-y-5">
+                         class="absolute right-0 z-10 mt-2
+                                w-[680px] max-w-[calc(100vw-1rem)]
+                                max-h-[80vh] overflow-y-auto
+                                rounded-md border border-slate-200 bg-white p-4 lg:p-5 text-slate-700 shadow-xl">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-5">
 
                             {{-- Subnet & IP --}}
                             <div>
