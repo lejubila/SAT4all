@@ -26,4 +26,7 @@ return [
     'your_ip'        => 'Il tuo indirizzo IP è',
     'ip_loading'     => 'rilevamento…',
     'ip_click_hint'  => 'Clicca per usare questo IP negli strumenti',
+
+    'favorites_title' => 'I tuoi preferiti',
+    'favorites_hint'  => 'Basato sulle tue visite recenti',
 ];

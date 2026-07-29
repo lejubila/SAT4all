@@ -9,6 +9,42 @@
         <p class="mt-4 max-w-2xl text-slate-600">{{ __('ui.home_intro') }}</p>
     </section>
 
+    {{-- Preferiti: calcolati client-side da localStorage, visibili dopo la prima visita a un tool --}}
+    <div x-data="{
+             favs: [],
+             init() {
+                 const u = JSON.parse(localStorage.getItem('sat_usage') || '{}');
+                 this.favs = Object.entries(u)
+                     .sort(([,a],[,b]) => b - a)
+                     .slice(0, 6)
+                     .map(([k]) => (window.SAT_TOOLS || []).find(t => t.key === k))
+                     .filter(Boolean);
+             }
+         }"
+         x-cloak>
+        <template x-if="favs.length > 0">
+            <section class="mb-10">
+                <div class="mb-4 flex items-baseline gap-3">
+                    <h2 class="text-lg font-semibold text-slate-800">{{ __('ui.favorites_title') }}</h2>
+                    <span class="text-sm text-slate-400">{{ __('ui.favorites_hint') }}</span>
+                </div>
+                <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    <template x-for="tool in favs" :key="tool.key">
+                        <a :href="tool.route"
+                           class="flex items-center gap-3 rounded-lg border border-amber-200 bg-amber-50
+                                  p-3 shadow-sm hover:border-amber-400 hover:bg-amber-100 transition-colors">
+                            <span class="text-amber-400 text-lg leading-none">★</span>
+                            <div class="min-w-0">
+                                <p class="truncate text-sm font-medium text-slate-800" x-text="tool.name"></p>
+                                <p class="truncate text-xs text-slate-500" x-text="tool.cat"></p>
+                            </div>
+                        </a>
+                    </template>
+                </div>
+            </section>
+        </template>
+    </div>
+
     @php
         $phases = [
             __('ui.group_subnet_ip') => [

@@ -15,6 +15,37 @@
     @stack('styles')
 </head>
 <body class="h-full bg-slate-50 text-slate-800 antialiased">
+
+@php
+    $satTools = collect(config('tools'))->map(function ($t) {
+        return [
+            'key'   => $t['key'],
+            'route' => route($t['route']),
+            'name'  => __($t['name_key']),
+            'cat'   => __('ui.' . $t['cat']),
+        ];
+    })->values()->all();
+
+    $routeName = Route::currentRouteName() ?? '';
+    $trackingKey = null;
+    if (str_starts_with($routeName, 'tools.') && str_ends_with($routeName, '.index')) {
+        $trackingKey = \Illuminate\Support\Str::of($routeName)->after('tools.')->beforeLast('.index')->value();
+    }
+@endphp
+{{-- Registro tool e script di tracking visite (localStorage) --}}
+<script>
+window.SAT_TOOLS = @json($satTools);
+@if ($trackingKey)
+(function () {
+    var key = '{{ $trackingKey }}';
+    try {
+        var u = JSON.parse(localStorage.getItem('sat_usage') || '{}');
+        u[key] = (u[key] || 0) + 1;
+        localStorage.setItem('sat_usage', JSON.stringify(u));
+    } catch (e) {}
+})();
+@endif
+</script>
     <header class="bg-slate-900 text-slate-100 shadow">
         <nav class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3">
             <a href="{{ route('home') }}" class="flex items-center gap-2 font-semibold tracking-tight">
@@ -25,7 +56,19 @@
             <div class="flex items-center gap-4 text-sm">
                 {{-- Menu Strumenti --}}
                 <div class="relative"
-                     x-data="{ open: false, dropTop: 0 }"
+                     x-data="{
+                         open: false,
+                         dropTop: 0,
+                         favs: [],
+                         init() {
+                             const u = JSON.parse(localStorage.getItem('sat_usage') || '{}');
+                             this.favs = Object.entries(u)
+                                 .sort(([,a],[,b]) => b - a)
+                                 .slice(0, 6)
+                                 .map(([k]) => (window.SAT_TOOLS || []).find(t => t.key === k))
+                                 .filter(Boolean);
+                         }
+                     }"
                      @click.outside="open = false">
                     <button type="button"
                             x-ref="btn"
@@ -45,6 +88,21 @@
                          class="lg:absolute lg:right-0 lg:mt-2 lg:w-[680px]
                                 z-50 max-h-[80vh] overflow-y-auto
                                 rounded-md border border-slate-200 bg-white p-4 lg:p-5 text-slate-700 shadow-xl">
+                        {{-- Preferiti: mostrato solo se ci sono dati di utilizzo --}}
+                        <template x-if="favs.length > 0">
+                            <div class="mb-4 pb-3 border-b border-slate-200">
+                                <p class="mb-1.5 text-[10px] font-bold uppercase tracking-wider text-amber-500">
+                                    ★ {{ __('ui.favorites_title') }}
+                                </p>
+                                <div class="grid grid-cols-2 lg:grid-cols-3 gap-x-2 gap-y-0.5">
+                                    <template x-for="tool in favs" :key="tool.key">
+                                        <a :href="tool.route" x-text="tool.name"
+                                           class="block rounded px-2 py-1 text-sm text-slate-700 hover:bg-slate-100"></a>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-5">
 
                             {{-- Subnet & IP --}}

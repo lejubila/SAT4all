@@ -26,4 +26,7 @@ return [
     'your_ip'        => 'Your IP address is',
     'ip_loading'     => 'detecting…',
     'ip_click_hint'  => 'Click to use this IP in the tools',
+
+    'favorites_title' => 'Your favorites',
+    'favorites_hint'  => 'Based on your recent visits',
 ];
