@@ -24,18 +24,26 @@
 
             <div class="flex items-center gap-4 text-sm">
                 {{-- Menu Strumenti --}}
-                <div class="relative" x-data="{ open: false }" @click.outside="open = false">
-                    <button type="button" @click="open = !open"
+                <div class="relative"
+                     x-data="{ open: false, dropTop: 0 }"
+                     @click.outside="open = false">
+                    <button type="button"
+                            x-ref="btn"
+                            @click="open = !open; if (open) dropTop = $refs.btn.getBoundingClientRect().bottom + 8"
                             class="flex items-center gap-1 hover:text-emerald-400">
                         {{ __('ui.nav_tools') }}
                         <span class="text-xs" x-text="open ? '▲' : '▼'"></span>
                     </button>
 
-                    {{-- Mega-menu: griglia responsive 1→2→3 colonne per categoria --}}
+                    {{-- Mega-menu:
+                         mobile  → fixed, larghezza viewport, posizionato sotto il bottone via JS
+                         desktop → absolute right-0, griglia 3 colonne --}}
                     <div x-show="open" x-cloak x-transition
-                         class="absolute right-0 z-10 mt-2
-                                w-[680px] max-w-[calc(100vw-1rem)]
-                                max-h-[80vh] overflow-y-auto
+                         :style="window.innerWidth < 1024
+                                    ? `position:fixed;top:${dropTop}px;left:8px;right:8px`
+                                    : ''"
+                         class="lg:absolute lg:right-0 lg:mt-2 lg:w-[680px]
+                                z-50 max-h-[80vh] overflow-y-auto
                                 rounded-md border border-slate-200 bg-white p-4 lg:p-5 text-slate-700 shadow-xl">
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-5">
 
