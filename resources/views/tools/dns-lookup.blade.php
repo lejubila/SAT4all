@@ -1,5 +1,12 @@
 @extends('layouts.app')
 
+@push('styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+<style>
+    .fi { width: 1.5em; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,.08); }
+</style>
+@endpush
+
 @section('title', __('tools.dns_lookup.title'))
 
 @section('content')

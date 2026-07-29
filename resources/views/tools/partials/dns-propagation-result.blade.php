@@ -63,7 +63,7 @@
 
                         {{-- Flag --}}
                         <td class="px-3 py-2.5 text-center">
-                            <span class="text-2xl leading-none" title="{{ $row['location'] }}">{{ $row['flag'] }}</span>
+                            <span class="fi fi-{{ $row['iso'] }} text-xl" title="{{ $row['location'] }}"></span>
                         </td>
 
                         {{-- Server info --}}
