@@ -586,6 +586,20 @@ return [
         'error_host_required'=> 'The hostname is required.',
         'error_host_invalid' => 'Please enter a valid hostname (e.g. example.com).',
         'error_port_invalid' => 'Port must be a number between 1 and 65535.',
+
+        'label_service'      => 'Service',
+        'service_custom'     => '— manual port —',
+        'service_https'      => 'HTTPS',
+        'service_smtps'      => 'SMTPS (465)',
+        'service_smtp_tls'   => 'SMTP + STARTTLS (587)',
+        'service_imaps'      => 'IMAPS (993)',
+        'service_pop3s'      => 'POP3S (995)',
+        'service_ldaps'      => 'LDAPS (636)',
+        'service_ftps'       => 'FTPS (990)',
+        'service_rdp'        => 'RDP (3389)',
+        'service_mysql_tls'  => 'MySQL TLS (3306)',
+        'service_postgres'   => 'PostgreSQL TLS (5432)',
+        'service_mqtt_tls'   => 'MQTT TLS (8883)',
     ],
 
     'base_converter' => [
