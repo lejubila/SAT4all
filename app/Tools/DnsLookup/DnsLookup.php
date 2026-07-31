@@ -20,7 +20,7 @@ class DnsLookup
         'CNAME' => DNS_CNAME,
         'SOA'   => DNS_SOA,
         'PTR'   => DNS_PTR,
-        'ALL'   => DNS_ALL,
+        'ALL'   => null,
     ];
 
     private string $host;
@@ -48,10 +48,14 @@ class DnsLookup
     public function lookup(): array
     {
         $host = $this->resolveHost();
-        $flag = self::TYPE_MAP[$this->type] ?? DNS_A;
 
-        // dns_get_record restituisce false in caso di errore di rete o NXDOMAIN.
-        $raw = @dns_get_record($host, $flag);
+        // DNS_ALL non è affidabile su Linux: interroga ogni tipo singolarmente.
+        if ($this->type === 'ALL') {
+            $raw = $this->queryAll($host);
+        } else {
+            $flag = self::TYPE_MAP[$this->type] ?? DNS_A;
+            $raw  = @dns_get_record($host, $flag);
+        }
 
         if ($raw === false || $raw === []) {
             return [
@@ -82,6 +86,28 @@ class DnsLookup
             'count'   => count($records),
             'error'   => null,
         ];
+    }
+
+    /**
+     * Interroga ogni tipo di record individualmente e unisce i risultati.
+     * Usato per ALL perché DNS_ALL non è affidabile su Linux.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function queryAll(string $host): array
+    {
+        $types  = ['A' => DNS_A, 'AAAA' => DNS_AAAA, 'MX' => DNS_MX, 'NS' => DNS_NS,
+                   'TXT' => DNS_TXT, 'CNAME' => DNS_CNAME, 'SOA' => DNS_SOA];
+        $merged = [];
+
+        foreach ($types as $flag) {
+            $res = @dns_get_record($host, $flag);
+            if ($res) {
+                $merged = array_merge($merged, $res);
+            }
+        }
+
+        return $merged;
     }
 
     /**
