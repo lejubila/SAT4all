@@ -782,6 +782,14 @@ return [
         'auth_raw'   => 'Authentication-Results grezzo',
         'auth_none'  => 'Assente',
 
+        'auth_domain'        => 'Dominio',
+        'auth_selector'      => 'Selettore',
+        'auth_policy_label'  => 'Policy',
+        'auth_dns_name'      => 'Nome DNS',
+        'auth_dns_record'    => 'Record DNS',
+        'auth_dns_not_found' => 'Record non trovato',
+        'auth_signatures'    => 'Firmato anche da',
+
         'error_no_headers' => 'Nessun header riconosciuto. Verifica che il testo incollato contenga degli header email validi.',
         'error_too_large'  => "L'header supera il limite di 50.000 caratteri.",
     ],

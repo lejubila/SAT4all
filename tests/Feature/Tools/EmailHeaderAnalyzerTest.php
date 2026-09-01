@@ -118,6 +118,23 @@ class EmailHeaderAnalyzerTest extends TestCase
           ->assertSee('30 s');
     }
 
+    private const HEADER_MULTIPLE_AUTH = <<<'EOH'
+        Authentication-Results: mx2.example.com;
+            dkim=pass header.d=sender.com header.s=key2048
+        Authentication-Results: mx1.example.com;
+            spf=pass smtp.mailfrom=sender.com
+        From: user@sender.com
+        Subject: Multi-auth test
+        EOH;
+
+    private const HEADER_DKIM_SIG_ONLY = <<<'EOH'
+        DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+            d=newsletter.com; s=default; h=from:subject:date;
+            b=abc123
+        From: user@newsletter.com
+        Subject: DKIM only
+        EOH;
+
     // ── Authentication ───────────────────────────────────────────────────────
 
     public function test_authentication_results_extracted(): void
@@ -125,7 +142,26 @@ class EmailHeaderAnalyzerTest extends TestCase
         $this->post(route('tools.email-header-analyzer.analyze'), [
             'header' => self::HEADER_WITH_AUTH,
         ])->assertOk()
-          ->assertSee('PASS');
+          ->assertSee('PASS')
+          ->assertSee('example.com');
+    }
+
+    public function test_multiple_auth_results_headers_both_parsed(): void
+    {
+        $this->post(route('tools.email-header-analyzer.analyze'), [
+            'header' => self::HEADER_MULTIPLE_AUTH,
+        ])->assertOk()
+          ->assertSee('PASS')
+          ->assertSee('sender.com');
+    }
+
+    public function test_dkim_signature_header_provides_selector_and_domain(): void
+    {
+        $this->post(route('tools.email-header-analyzer.analyze'), [
+            'header' => self::HEADER_DKIM_SIG_ONLY,
+        ])->assertOk()
+          ->assertSee('newsletter.com')
+          ->assertSee('default');
     }
 
     // ── Validation ───────────────────────────────────────────────────────────

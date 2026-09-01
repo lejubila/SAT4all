@@ -6,9 +6,12 @@ class EmailHeaderAnalyzer
 {
     private string $raw;
 
-    public function __construct(string $raw)
+    private bool $performDnsLookups;
+
+    public function __construct(string $raw, bool $performDnsLookups = true)
     {
-        $this->raw = $raw;
+        $this->raw              = $raw;
+        $this->performDnsLookups = $performDnsLookups;
     }
 
     public function analyze(): array
@@ -233,32 +236,234 @@ class EmailHeaderAnalyzer
 
     private function extractAuth(array $headers): array
     {
-        $raw = null;
+        $authValues = $this->collectAuthHeaders($headers);
+
+        $spf   = ['result' => null, 'domain' => null, 'dns_queried' => null, 'dns_record' => null];
+        $dkim  = ['result' => null, 'domain' => null, 'selector' => null,
+                  'dns_name' => null, 'dns_record' => null, 'signatures' => []];
+        $dmarc = ['result' => null, 'domain' => null, 'policy' => null,
+                  'dns_name' => null, 'dns_record' => null];
+
+        foreach ($authValues as $value) {
+            $parsed = $this->parseSingleAuthHeader($value);
+
+            if ($spf['result'] === null && $parsed['spf']['result'] !== null) {
+                $spf['result'] = $parsed['spf']['result'];
+            }
+            if ($spf['domain'] === null && $parsed['spf']['domain'] !== null) {
+                $spf['domain'] = $parsed['spf']['domain'];
+            }
+
+            if ($dkim['result'] === null && $parsed['dkim']['result'] !== null) {
+                $dkim['result'] = $parsed['dkim']['result'];
+            }
+            if ($dkim['domain'] === null && $parsed['dkim']['domain'] !== null) {
+                $dkim['domain'] = $parsed['dkim']['domain'];
+            }
+            if ($dkim['selector'] === null && $parsed['dkim']['selector'] !== null) {
+                $dkim['selector'] = $parsed['dkim']['selector'];
+            }
+
+            if ($dmarc['result'] === null && $parsed['dmarc']['result'] !== null) {
+                $dmarc['result'] = $parsed['dmarc']['result'];
+            }
+            if ($dmarc['domain'] === null && $parsed['dmarc']['domain'] !== null) {
+                $dmarc['domain'] = $parsed['dmarc']['domain'];
+            }
+            if ($dmarc['policy'] === null && $parsed['dmarc']['policy'] !== null) {
+                $dmarc['policy'] = $parsed['dmarc']['policy'];
+            }
+        }
+
+        // Fallback: DKIM-Signature headers when Authentication-Results incomplete
+        $signatures       = $this->parseDkimSignatures($headers);
+        $dkim['signatures'] = $signatures;
+        if (! empty($signatures)) {
+            if ($dkim['domain'] === null) {
+                $dkim['domain'] = $signatures[0]['domain'];
+            }
+            if ($dkim['selector'] === null) {
+                $dkim['selector'] = $signatures[0]['selector'];
+            }
+        }
+
+        // Fallback: From: header domain for SPF and DMARC
         foreach ($headers as $h) {
-            if (strtolower($h['name']) === 'authentication-results') {
-                $raw = $h['value'];
+            if (strtolower($h['name']) === 'from') {
+                if (preg_match('/@([\w.\-]+)/u', $h['value'], $m)) {
+                    $fromDomain = strtolower($m[1]);
+                    if ($spf['domain'] === null) {
+                        $spf['domain'] = $fromDomain;
+                    }
+                    if ($dmarc['domain'] === null) {
+                        $dmarc['domain'] = $fromDomain;
+                    }
+                }
                 break;
             }
         }
 
-        if ($raw === null) {
-            return ['spf' => null, 'dkim' => null, 'dmarc' => null, 'raw' => null];
-        }
-
-        return array_merge($this->parseAuth($raw), ['raw' => $raw]);
-    }
-
-    private function parseAuth(string $value): array
-    {
-        $result = ['spf' => null, 'dkim' => null, 'dmarc' => null];
-
-        foreach (array_keys($result) as $proto) {
-            if (preg_match('/\b' . $proto . '=(\S+)/i', $value, $m)) {
-                $result[$proto] = strtolower(rtrim($m[1], ';,'));
+        if ($this->performDnsLookups) {
+            if ($spf['domain'] !== null) {
+                $spf['dns_queried'] = $spf['domain'];
+                $spf['dns_record']  = $this->lookupSpfDns($spf['domain']);
+            }
+            if ($dkim['selector'] !== null && $dkim['domain'] !== null) {
+                $dkimDns            = $this->lookupDkimDns($dkim['selector'], $dkim['domain']);
+                $dkim['dns_name']   = $dkimDns['name'];
+                $dkim['dns_record'] = $dkimDns['record'];
+            }
+            if ($dmarc['domain'] !== null) {
+                $dmarcDns            = $this->lookupDmarcDns($dmarc['domain']);
+                $dmarc['dns_name']   = $dmarcDns['name'];
+                $dmarc['dns_record'] = $dmarcDns['record'];
             }
         }
 
-        return $result;
+        $raw = empty($authValues) ? null : implode("\n\n", $authValues);
+
+        return compact('spf', 'dkim', 'dmarc', 'raw');
+    }
+
+    private function collectAuthHeaders(array $headers): array
+    {
+        $values = [];
+        foreach ($headers as $h) {
+            if (strtolower($h['name']) === 'authentication-results') {
+                $values[] = $h['value'];
+            }
+        }
+        return $values;
+    }
+
+    private function parseSingleAuthHeader(string $value): array
+    {
+        $strip = static fn (string $s): string => strtolower(rtrim($s, ';,'));
+
+        $spfResult  = null;
+        $spfDomain  = null;
+        if (preg_match('/\bspf=(\S+)/i', $value, $m)) {
+            $spfResult = $strip($m[1]);
+        }
+        if (preg_match('/smtp\.(?:mailfrom|helo)=([^\s;]+)/i', $value, $m)) {
+            $spfDomain = $this->extractDomainFromEmail($strip($m[1]));
+        }
+
+        $dkimResult   = null;
+        $dkimDomain   = null;
+        $dkimSelector = null;
+        if (preg_match('/\bdkim=(\S+)/i', $value, $m)) {
+            $dkimResult = $strip($m[1]);
+        }
+        if (preg_match('/header\.d=([^\s;]+)/i', $value, $m)) {
+            $dkimDomain = $strip($m[1]);
+        }
+        if (preg_match('/header\.s=([^\s;]+)/i', $value, $m)) {
+            $dkimSelector = $strip($m[1]);
+        }
+
+        $dmarcResult = null;
+        $dmarcDomain = null;
+        $dmarcPolicy = null;
+        if (preg_match('/\bdmarc=(\S+)/i', $value, $m)) {
+            $dmarcResult = $strip($m[1]);
+        }
+        if (preg_match('/header\.from=([^\s;]+)/i', $value, $m)) {
+            $dmarcDomain = $this->extractDomainFromEmail($strip($m[1]));
+        }
+        if (preg_match('/\bp=([^\s;)]+)/i', $value, $m)) {
+            $dmarcPolicy = $strip($m[1]);
+        }
+
+        return [
+            'spf'   => ['result' => $spfResult,   'domain' => $spfDomain],
+            'dkim'  => ['result' => $dkimResult,  'domain' => $dkimDomain,  'selector' => $dkimSelector],
+            'dmarc' => ['result' => $dmarcResult, 'domain' => $dmarcDomain, 'policy'   => $dmarcPolicy],
+        ];
+    }
+
+    private function parseDkimSignatures(array $headers): array
+    {
+        $signatures = [];
+        foreach ($headers as $h) {
+            if (strtolower($h['name']) !== 'dkim-signature') {
+                continue;
+            }
+            $domain   = null;
+            $selector = null;
+            if (preg_match('/\bd=([^\s;]+)/i', $h['value'], $m)) {
+                $domain = strtolower(rtrim($m[1], ';,'));
+            }
+            if (preg_match('/\bs=([^\s;]+)/i', $h['value'], $m)) {
+                $selector = strtolower(rtrim($m[1], ';,'));
+            }
+            if ($domain !== null || $selector !== null) {
+                $signatures[] = ['domain' => $domain, 'selector' => $selector];
+            }
+        }
+        return $signatures;
+    }
+
+    private function lookupSpfDns(string $domain): ?string
+    {
+        try {
+            $records = @dns_get_record($domain, DNS_TXT);
+            if (is_array($records)) {
+                foreach ($records as $r) {
+                    $txt = $r['txt'] ?? ($r['entries'][0] ?? '');
+                    if (str_starts_with(strtolower($txt), 'v=spf1')) {
+                        return $txt;
+                    }
+                }
+            }
+        } catch (\Throwable) {}
+        return null;
+    }
+
+    private function lookupDkimDns(string $selector, string $domain): array
+    {
+        $name   = $selector . '._domainkey.' . $domain;
+        $record = null;
+        try {
+            $records = @dns_get_record($name, DNS_TXT);
+            if (is_array($records)) {
+                foreach ($records as $r) {
+                    $txt = $r['txt'] ?? ($r['entries'][0] ?? '');
+                    if ($txt !== '') {
+                        $record = $txt;
+                        break;
+                    }
+                }
+            }
+        } catch (\Throwable) {}
+        return ['name' => $name, 'record' => $record];
+    }
+
+    private function lookupDmarcDns(string $domain): array
+    {
+        $name   = '_dmarc.' . $domain;
+        $record = null;
+        try {
+            $records = @dns_get_record($name, DNS_TXT);
+            if (is_array($records)) {
+                foreach ($records as $r) {
+                    $txt = $r['txt'] ?? ($r['entries'][0] ?? '');
+                    if (str_starts_with(strtolower($txt), 'v=dmarc1')) {
+                        $record = $txt;
+                        break;
+                    }
+                }
+            }
+        } catch (\Throwable) {}
+        return ['name' => $name, 'record' => $record];
+    }
+
+    private function extractDomainFromEmail(string $emailOrDomain): string
+    {
+        if (str_contains($emailOrDomain, '@')) {
+            return strtolower(substr($emailOrDomain, strpos($emailOrDomain, '@') + 1));
+        }
+        return strtolower($emailOrDomain);
     }
 
     // ── Formatting helper ─────────────────────────────────────────────────────

@@ -146,28 +146,149 @@
             {{ __('tools.email_header_analyzer.section_auth') }}
         </h2>
 
-        <div class="flex flex-wrap gap-4">
-            @foreach ([
-                'spf'   => __('tools.email_header_analyzer.auth_spf'),
-                'dkim'  => __('tools.email_header_analyzer.auth_dkim'),
-                'dmarc' => __('tools.email_header_analyzer.auth_dmarc'),
-            ] as $proto => $label)
-                @php $val = $result['auth'][$proto] ?? null; @endphp
-                <div class="flex flex-col items-center gap-1">
-                    <span class="text-xs font-semibold uppercase text-slate-500">{{ $label }}</span>
-                    <span class="rounded-full border px-4 py-1 text-sm font-bold {{ $authColor($val) }}">
-                        {{ $val !== null ? strtoupper($val) : __('tools.email_header_analyzer.auth_none') }}
+        <div class="grid gap-4 sm:grid-cols-3">
+
+            {{-- SPF --}}
+            @php $spf = $result['auth']['spf'] ?? []; $spfResult = $spf['result'] ?? null; @endphp
+            <div class="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                <div class="mb-2 flex items-center justify-between gap-2">
+                    <span class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                        {{ __('tools.email_header_analyzer.auth_spf') }}
+                    </span>
+                    <span class="rounded-full border px-3 py-0.5 text-xs font-bold {{ $authColor($spfResult) }}">
+                        {{ $spfResult !== null ? strtoupper($spfResult) : __('tools.email_header_analyzer.auth_none') }}
                     </span>
                 </div>
-            @endforeach
-        </div>
+                @if (! empty($spf['domain']))
+                    <dl class="space-y-1.5 text-xs">
+                        <div>
+                            <dt class="font-semibold text-slate-500">{{ __('tools.email_header_analyzer.auth_domain') }}</dt>
+                            <dd class="font-mono text-slate-700">{{ $spf['domain'] }}</dd>
+                        </div>
+                        @if (! empty($spf['dns_queried']))
+                            <div>
+                                <dt class="font-semibold text-slate-500">{{ __('tools.email_header_analyzer.auth_dns_name') }}</dt>
+                                <dd class="break-all font-mono text-slate-700">{{ $spf['dns_queried'] }}</dd>
+                            </div>
+                            <div>
+                                <dt class="font-semibold text-slate-500">{{ __('tools.email_header_analyzer.auth_dns_record') }}</dt>
+                                @if (! empty($spf['dns_record']))
+                                    <dd class="mt-0.5 overflow-x-auto rounded border border-slate-200 bg-white p-1.5">
+                                        <code class="break-all text-xs text-slate-700">{{ $spf['dns_record'] }}</code>
+                                    </dd>
+                                @else
+                                    <dd class="font-medium text-amber-600">{{ __('tools.email_header_analyzer.auth_dns_not_found') }}</dd>
+                                @endif
+                            </div>
+                        @endif
+                    </dl>
+                @endif
+            </div>
+
+            {{-- DKIM --}}
+            @php $dkim = $result['auth']['dkim'] ?? []; $dkimResult = $dkim['result'] ?? null; @endphp
+            <div class="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                <div class="mb-2 flex items-center justify-between gap-2">
+                    <span class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                        {{ __('tools.email_header_analyzer.auth_dkim') }}
+                    </span>
+                    <span class="rounded-full border px-3 py-0.5 text-xs font-bold {{ $authColor($dkimResult) }}">
+                        {{ $dkimResult !== null ? strtoupper($dkimResult) : __('tools.email_header_analyzer.auth_none') }}
+                    </span>
+                </div>
+                <dl class="space-y-1.5 text-xs">
+                    @if (! empty($dkim['domain']))
+                        <div>
+                            <dt class="font-semibold text-slate-500">{{ __('tools.email_header_analyzer.auth_domain') }}</dt>
+                            <dd class="font-mono text-slate-700">{{ $dkim['domain'] }}</dd>
+                        </div>
+                    @endif
+                    @if (! empty($dkim['selector']))
+                        <div>
+                            <dt class="font-semibold text-slate-500">{{ __('tools.email_header_analyzer.auth_selector') }}</dt>
+                            <dd class="font-mono text-slate-700">{{ $dkim['selector'] }}</dd>
+                        </div>
+                    @endif
+                    @if (! empty($dkim['dns_name']))
+                        <div>
+                            <dt class="font-semibold text-slate-500">{{ __('tools.email_header_analyzer.auth_dns_name') }}</dt>
+                            <dd class="break-all font-mono text-slate-700">{{ $dkim['dns_name'] }}</dd>
+                        </div>
+                        <div>
+                            <dt class="font-semibold text-slate-500">{{ __('tools.email_header_analyzer.auth_dns_record') }}</dt>
+                            @if (! empty($dkim['dns_record']))
+                                <dd class="mt-0.5 overflow-x-auto rounded border border-slate-200 bg-white p-1.5">
+                                    <code class="break-all text-xs text-slate-700">{{ $dkim['dns_record'] }}</code>
+                                </dd>
+                            @else
+                                <dd class="font-medium text-amber-600">{{ __('tools.email_header_analyzer.auth_dns_not_found') }}</dd>
+                            @endif
+                        </div>
+                    @endif
+                </dl>
+                @if (count($dkim['signatures'] ?? []) > 1)
+                    <div class="mt-2 border-t border-slate-200 pt-2">
+                        <p class="mb-1 text-xs font-semibold text-slate-400">{{ __('tools.email_header_analyzer.auth_signatures') }}</p>
+                        @foreach ($dkim['signatures'] as $sig)
+                            <p class="font-mono text-xs text-slate-600">
+                                {{ $sig['selector'] ?? '?' }}<span class="text-slate-400">._domainkey.</span>{{ $sig['domain'] ?? '?' }}
+                            </p>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+
+            {{-- DMARC --}}
+            @php $dmarc = $result['auth']['dmarc'] ?? []; $dmarcResult = $dmarc['result'] ?? null; @endphp
+            <div class="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                <div class="mb-2 flex items-center justify-between gap-2">
+                    <span class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                        {{ __('tools.email_header_analyzer.auth_dmarc') }}
+                    </span>
+                    <span class="rounded-full border px-3 py-0.5 text-xs font-bold {{ $authColor($dmarcResult) }}">
+                        {{ $dmarcResult !== null ? strtoupper($dmarcResult) : __('tools.email_header_analyzer.auth_none') }}
+                    </span>
+                </div>
+                <dl class="space-y-1.5 text-xs">
+                    @if (! empty($dmarc['domain']))
+                        <div>
+                            <dt class="font-semibold text-slate-500">{{ __('tools.email_header_analyzer.auth_domain') }}</dt>
+                            <dd class="font-mono text-slate-700">{{ $dmarc['domain'] }}</dd>
+                        </div>
+                    @endif
+                    @if (! empty($dmarc['policy']))
+                        <div>
+                            <dt class="font-semibold text-slate-500">{{ __('tools.email_header_analyzer.auth_policy_label') }}</dt>
+                            <dd class="font-mono text-slate-700">{{ $dmarc['policy'] }}</dd>
+                        </div>
+                    @endif
+                    @if (! empty($dmarc['dns_name']))
+                        <div>
+                            <dt class="font-semibold text-slate-500">{{ __('tools.email_header_analyzer.auth_dns_name') }}</dt>
+                            <dd class="break-all font-mono text-slate-700">{{ $dmarc['dns_name'] }}</dd>
+                        </div>
+                        <div>
+                            <dt class="font-semibold text-slate-500">{{ __('tools.email_header_analyzer.auth_dns_record') }}</dt>
+                            @if (! empty($dmarc['dns_record']))
+                                <dd class="mt-0.5 overflow-x-auto rounded border border-slate-200 bg-white p-1.5">
+                                    <code class="break-all text-xs text-slate-700">{{ $dmarc['dns_record'] }}</code>
+                                </dd>
+                            @else
+                                <dd class="font-medium text-amber-600">{{ __('tools.email_header_analyzer.auth_dns_not_found') }}</dd>
+                            @endif
+                        </div>
+                    @endif
+                </dl>
+            </div>
+
+        </div>{{-- end 3-col grid --}}
 
         @if (! empty($result['auth']['raw']))
             <details class="mt-3">
                 <summary class="cursor-pointer text-xs text-slate-400 hover:text-slate-600">
                     {{ __('tools.email_header_analyzer.auth_raw') }}
                 </summary>
-                <p class="mt-1 break-all font-mono text-xs text-slate-600">{{ $result['auth']['raw'] }}</p>
+                <pre class="mt-1 overflow-x-auto rounded bg-slate-50 p-2 font-mono text-xs text-slate-600 whitespace-pre-wrap break-all">{{ $result['auth']['raw'] }}</pre>
             </details>
         @endif
     </section>

@@ -782,6 +782,14 @@ return [
         'auth_raw'   => 'Raw Authentication-Results',
         'auth_none'  => 'Absent',
 
+        'auth_domain'        => 'Domain',
+        'auth_selector'      => 'Selector',
+        'auth_policy_label'  => 'Policy',
+        'auth_dns_name'      => 'DNS name',
+        'auth_dns_record'    => 'DNS record',
+        'auth_dns_not_found' => 'Record not found',
+        'auth_signatures'    => 'Also signed by',
+
         'error_no_headers' => 'No recognisable headers found. Make sure the pasted text contains valid email headers.',
         'error_too_large'  => 'The header exceeds the 50,000 character limit.',
     ],
