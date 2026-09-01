@@ -780,7 +780,9 @@ return [
         'auth_dkim'  => 'DKIM',
         'auth_dmarc' => 'DMARC',
         'auth_raw'   => 'Authentication-Results grezzo',
-        'auth_none'  => 'Assente',
+        'auth_none'    => 'Assente',
+        'auth_present' => 'Presente',
+        'auth_signed'  => 'Firmato',
 
         'auth_domain'        => 'Dominio',
         'auth_selector'      => 'Selettore',

@@ -3,11 +3,13 @@
 
     $authColor = function (?string $v): string {
         return match ($v) {
-            'pass'              => 'bg-emerald-100 text-emerald-800 border-emerald-300',
-            'fail'              => 'bg-red-100 text-red-800 border-red-300',
-            'softfail'          => 'bg-amber-100 text-amber-800 border-amber-300',
-            'neutral', 'none'   => 'bg-slate-100 text-slate-600 border-slate-300',
-            default             => 'bg-slate-100 text-slate-500 border-slate-200',
+            'pass'                    => 'bg-emerald-100 text-emerald-800 border-emerald-300',
+            'fail'                    => 'bg-red-100 text-red-800 border-red-300',
+            'softfail'                => 'bg-amber-100 text-amber-800 border-amber-300',
+            'neutral', 'none'         => 'bg-slate-100 text-slate-600 border-slate-300',
+            'presente', 'present'     => 'bg-teal-100 text-teal-800 border-teal-300',
+            'firmato',  'signed'      => 'bg-blue-100 text-blue-800 border-blue-300',
+            default                   => 'bg-slate-100 text-slate-500 border-slate-200',
         };
     };
 
@@ -149,14 +151,29 @@
         <div class="grid gap-4 sm:grid-cols-3">
 
             {{-- SPF --}}
-            @php $spf = $result['auth']['spf'] ?? []; $spfResult = $spf['result'] ?? null; @endphp
+            @php
+                $spf = $result['auth']['spf'] ?? [];
+                $spfResult = $spf['result'] ?? null;
+                if ($spfResult === null) {
+                    if (! empty($spf['dns_record'])) {
+                        $spfBadge = __('tools.email_header_analyzer.auth_present');
+                        $spfBadgeKey = app()->getLocale() === 'it' ? 'presente' : 'present';
+                    } else {
+                        $spfBadge = __('tools.email_header_analyzer.auth_none');
+                        $spfBadgeKey = null;
+                    }
+                } else {
+                    $spfBadge = strtoupper($spfResult);
+                    $spfBadgeKey = $spfResult;
+                }
+            @endphp
             <div class="rounded-lg border border-slate-200 bg-slate-50 p-3">
                 <div class="mb-2 flex items-center justify-between gap-2">
                     <span class="text-xs font-bold uppercase tracking-wide text-slate-500">
                         {{ __('tools.email_header_analyzer.auth_spf') }}
                     </span>
-                    <span class="rounded-full border px-3 py-0.5 text-xs font-bold {{ $authColor($spfResult) }}">
-                        {{ $spfResult !== null ? strtoupper($spfResult) : __('tools.email_header_analyzer.auth_none') }}
+                    <span class="rounded-full border px-3 py-0.5 text-xs font-bold {{ $authColor($spfBadgeKey) }}">
+                        {{ $spfBadge }}
                     </span>
                 </div>
                 @if (! empty($spf['domain']))
@@ -186,14 +203,32 @@
             </div>
 
             {{-- DKIM --}}
-            @php $dkim = $result['auth']['dkim'] ?? []; $dkimResult = $dkim['result'] ?? null; @endphp
+            @php
+                $dkim = $result['auth']['dkim'] ?? [];
+                $dkimResult = $dkim['result'] ?? null;
+                if ($dkimResult === null) {
+                    if (! empty($dkim['signatures'])) {
+                        $dkimBadge = __('tools.email_header_analyzer.auth_signed');
+                        $dkimBadgeKey = app()->getLocale() === 'it' ? 'firmato' : 'signed';
+                    } elseif (! empty($dkim['dns_record'])) {
+                        $dkimBadge = __('tools.email_header_analyzer.auth_present');
+                        $dkimBadgeKey = app()->getLocale() === 'it' ? 'presente' : 'present';
+                    } else {
+                        $dkimBadge = __('tools.email_header_analyzer.auth_none');
+                        $dkimBadgeKey = null;
+                    }
+                } else {
+                    $dkimBadge = strtoupper($dkimResult);
+                    $dkimBadgeKey = $dkimResult;
+                }
+            @endphp
             <div class="rounded-lg border border-slate-200 bg-slate-50 p-3">
                 <div class="mb-2 flex items-center justify-between gap-2">
                     <span class="text-xs font-bold uppercase tracking-wide text-slate-500">
                         {{ __('tools.email_header_analyzer.auth_dkim') }}
                     </span>
-                    <span class="rounded-full border px-3 py-0.5 text-xs font-bold {{ $authColor($dkimResult) }}">
-                        {{ $dkimResult !== null ? strtoupper($dkimResult) : __('tools.email_header_analyzer.auth_none') }}
+                    <span class="rounded-full border px-3 py-0.5 text-xs font-bold {{ $authColor($dkimBadgeKey) }}">
+                        {{ $dkimBadge }}
                     </span>
                 </div>
                 <dl class="space-y-1.5 text-xs">
@@ -239,14 +274,29 @@
             </div>
 
             {{-- DMARC --}}
-            @php $dmarc = $result['auth']['dmarc'] ?? []; $dmarcResult = $dmarc['result'] ?? null; @endphp
+            @php
+                $dmarc = $result['auth']['dmarc'] ?? [];
+                $dmarcResult = $dmarc['result'] ?? null;
+                if ($dmarcResult === null) {
+                    if (! empty($dmarc['dns_record'])) {
+                        $dmarcBadge = __('tools.email_header_analyzer.auth_present');
+                        $dmarcBadgeKey = app()->getLocale() === 'it' ? 'presente' : 'present';
+                    } else {
+                        $dmarcBadge = __('tools.email_header_analyzer.auth_none');
+                        $dmarcBadgeKey = null;
+                    }
+                } else {
+                    $dmarcBadge = strtoupper($dmarcResult);
+                    $dmarcBadgeKey = $dmarcResult;
+                }
+            @endphp
             <div class="rounded-lg border border-slate-200 bg-slate-50 p-3">
                 <div class="mb-2 flex items-center justify-between gap-2">
                     <span class="text-xs font-bold uppercase tracking-wide text-slate-500">
                         {{ __('tools.email_header_analyzer.auth_dmarc') }}
                     </span>
-                    <span class="rounded-full border px-3 py-0.5 text-xs font-bold {{ $authColor($dmarcResult) }}">
-                        {{ $dmarcResult !== null ? strtoupper($dmarcResult) : __('tools.email_header_analyzer.auth_none') }}
+                    <span class="rounded-full border px-3 py-0.5 text-xs font-bold {{ $authColor($dmarcBadgeKey) }}">
+                        {{ $dmarcBadge }}
                     </span>
                 </div>
                 <dl class="space-y-1.5 text-xs">

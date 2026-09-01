@@ -780,7 +780,9 @@ return [
         'auth_dkim'  => 'DKIM',
         'auth_dmarc' => 'DMARC',
         'auth_raw'   => 'Raw Authentication-Results',
-        'auth_none'  => 'Absent',
+        'auth_none'    => 'Absent',
+        'auth_present' => 'Present',
+        'auth_signed'  => 'Signed',
 
         'auth_domain'        => 'Domain',
         'auth_selector'      => 'Selector',
