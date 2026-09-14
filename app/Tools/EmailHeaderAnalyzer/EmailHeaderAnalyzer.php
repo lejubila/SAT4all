@@ -106,15 +106,53 @@ class EmailHeaderAnalyzer
 
     private function extractHops(array $headers): array
     {
-        $received = [];
+        $received  = [];
+        $xReceived = [];
         foreach ($headers as $h) {
-            if (strtolower($h['name']) === 'received') {
+            $lower = strtolower($h['name']);
+            if ($lower === 'received') {
                 $received[] = $h['value'];
+            } elseif ($lower === 'x-received') {
+                $xReceived[] = $h['value'];
             }
         }
 
         // Reverse: bottom header = first hop (origin)
-        $received = array_reverse($received);
+        $received  = array_reverse($received);
+        $xReceived = array_reverse($xReceived);
+
+        // Merge X-Received hops with Received hops, ordered by timestamp.
+        // X-Received headers are Google-specific non-standard hops (e.g. the
+        // originating SMTP submission before the first standard Received: hop).
+        $allValues = array_merge($received, $xReceived);
+        if (! empty($xReceived)) {
+            // Parse all hops first, then re-sort by unix timestamp so that
+            // X-Received hops land in the right chronological position.
+            $allParsed = array_map([$this, 'parseReceived'], $allValues);
+            usort($allParsed, function ($a, $b) {
+                // Nulls go to the beginning (earliest / unknown)
+                if ($a['unix'] === null && $b['unix'] === null) return 0;
+                if ($a['unix'] === null) return -1;
+                if ($b['unix'] === null) return 1;
+                return $a['unix'] <=> $b['unix'];
+            });
+
+            // Re-calculate delays after sorting
+            $hops     = [];
+            $prevUnix = null;
+            foreach ($allParsed as $hop) {
+                if ($prevUnix !== null && $hop['unix'] !== null) {
+                    $hop['delay_seconds'] = max(0, $hop['unix'] - $prevUnix);
+                } else {
+                    $hop['delay_seconds'] = null;
+                }
+                if ($hop['unix'] !== null) {
+                    $prevUnix = $hop['unix'];
+                }
+                $hops[] = $hop;
+            }
+            return $hops;
+        }
 
         $hops    = [];
         $prevUnix = null;
