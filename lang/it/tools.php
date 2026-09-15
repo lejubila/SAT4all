@@ -207,6 +207,7 @@ return [
 
         'prop_description' => 'Interroga 16 resolver DNS pubblici nel mondo e confronta le risposte per verificare la propagazione.',
         'prop_button'      => 'Verifica propagazione',
+        'loading'          => 'Interrogazione in corso…',
 
         'prop_status_propagated'  => 'Propagato — tutti i resolver concordano',
         'prop_status_propagating' => 'In propagazione — risposte discordanti rilevate',

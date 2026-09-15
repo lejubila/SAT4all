@@ -207,6 +207,7 @@ return [
 
         'prop_description' => 'Queries 16 public DNS resolvers worldwide and compares answers to check propagation status.',
         'prop_button'      => 'Check propagation',
+        'loading'          => 'Querying…',
 
         'prop_status_propagated'  => 'Propagated — all resolvers agree',
         'prop_status_propagating' => 'Propagating — inconsistent answers detected',

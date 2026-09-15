@@ -4,6 +4,15 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
 <style>
     .fi { width: 1.5em; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,.08); }
+
+    /* Spinner SVG che ruota */
+    .spin { animation: spin-anim 0.8s linear infinite; }
+    @keyframes spin-anim { to { transform: rotate(360deg); } }
+
+    /* htmx-indicator: nascosto di default, visibile durante request */
+    .htmx-indicator { display: none; }
+    .htmx-request .htmx-indicator { display: inline-flex; }
+    .htmx-request.htmx-indicator  { display: inline-flex; }
 </style>
 @endpush
 
@@ -18,6 +27,17 @@
             {{ __('tools.dns_lookup.description') }}
         </p>
     </section>
+
+    {{-- Template nascosto per il loading skeleton --}}
+    <template id="tpl-loading">
+        <div class="rounded-lg border border-slate-200 bg-white p-10 flex flex-col items-center justify-center gap-4 text-slate-500 min-h-[180px]">
+            <svg class="spin h-10 w-10 text-emerald-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-20" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+                <path class="opacity-80" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+            <p class="text-sm font-medium text-slate-600">{{ __('tools.dns_lookup.loading') }}</p>
+        </div>
+    </template>
 
     <div x-data="{ mode: 'single' }" class="grid gap-6 lg:grid-cols-5">
 
@@ -50,7 +70,7 @@
                   hx-post="{{ route('tools.dns-lookup.lookup') }}"
                   hx-target="#result"
                   hx-swap="innerHTML"
-                  hx-indicator="#spinner-single">
+                  hx-on:htmx:before-request="document.getElementById('result').innerHTML = document.getElementById('tpl-loading').innerHTML">
                 @csrf
 
                 <div>
@@ -80,9 +100,16 @@
                 </div>
 
                 <button type="submit"
-                        class="w-full rounded-md bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-900
-                               hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                    <span id="spinner-single" class="htmx-indicator mr-1">⟳</span>
+                        class="relative w-full rounded-md bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-900
+                               hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500
+                               flex items-center justify-center gap-2">
+                    {{-- Spinner visibile solo durante la request --}}
+                    <span id="spinner-single" class="htmx-indicator items-center gap-1.5 text-slate-900">
+                        <svg class="spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-20" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+                            <path class="opacity-80" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                        </svg>
+                    </span>
                     {{ __('tools.dns_lookup.lookup') }}
                 </button>
             </form>
@@ -93,7 +120,7 @@
                   hx-post="{{ route('tools.dns-lookup.propagation') }}"
                   hx-target="#result"
                   hx-swap="innerHTML"
-                  hx-indicator="#spinner-prop">
+                  hx-on:htmx:before-request="document.getElementById('result').innerHTML = document.getElementById('tpl-loading').innerHTML">
                 @csrf
 
                 <p class="text-xs text-slate-500">
@@ -127,9 +154,16 @@
                 </div>
 
                 <button type="submit"
-                        class="w-full rounded-md bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-900
-                               hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                    <span id="spinner-prop" class="htmx-indicator mr-1">⟳</span>
+                        class="relative w-full rounded-md bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-900
+                               hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500
+                               flex items-center justify-center gap-2">
+                    {{-- Spinner visibile solo durante la request --}}
+                    <span id="spinner-prop" class="htmx-indicator items-center gap-1.5 text-slate-900">
+                        <svg class="spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-20" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+                            <path class="opacity-80" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                        </svg>
+                    </span>
                     {{ __('tools.dns_lookup.prop_button') }}
                 </button>
             </form>
