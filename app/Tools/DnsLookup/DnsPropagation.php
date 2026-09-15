@@ -27,8 +27,6 @@ class DnsPropagation
         ['ip' => '149.112.121.10',  'name' => 'CIRA',          'iso' => 'ca', 'location' => 'Canada'],
         ['ip' => '200.221.11.100',  'name' => 'Embratel',      'iso' => 'br', 'location' => 'Brazil'],
         // ── Europe ───────────────────────────────────────────────────────────
-        ['ip' => '62.149.157.55',   'name' => 'Aruba DNS',     'iso' => 'it', 'location' => 'Italy'],
-        ['ip' => '62.149.158.55',   'name' => 'Aruba DNS 2',   'iso' => 'it', 'location' => 'Italy'],
         ['ip' => '9.9.9.9',         'name' => 'Quad9',         'iso' => 'ch', 'location' => 'Switzerland'],
         ['ip' => '84.200.69.80',    'name' => 'DNS.WATCH',     'iso' => 'de', 'location' => 'Germany'],
         ['ip' => '80.67.169.40',    'name' => 'FDN',           'iso' => 'fr', 'location' => 'France'],
